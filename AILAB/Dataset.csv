@@ -1,0 +1,50 @@
+No.	Имя	Цена($)/Кг	Страна	Регион	Размер	Цвет	Сладость (1-10)	жесткость/влажность
+{[1]:	Ajwa	45	Saudi Arabia	Madinah	Medium	Black	Sweet	Semi-Dry
+2	Amber	35	Saudi Arabia	Madinah	Large	Brown	Sweet	Semi-Dry
+3	Safawi	28	Saudi Arabia	Madinah	Medium	Black	Syrupy	Semi-Dry
+4	Barhi	12	Saudi Arabia	Jeddah	Large	Yellow	Oversweet	Dry
+5	Saghai	18	Saudi Arabia	Riyadh	Medium	Brown	Sweet	Soft
+6	Khudri	15	Saudi Arabia	Riyadh	Medium	Dark Brown	Sour	Dry
+7	Sukkari	20	Saudi Arabia	Qaseem	Medium	Brown	Oversweet	Dry
+8	Zahidi	15	Saudi Arabia	Qaseem	Medium	Yellow	Oversweet	Soft
+9	Medjoor	25	Saudi Arabia	Qaseem	Large	Brown	Oversweet	Soft
+10	Kholas	9	Saudi Arabia	Jeddah	Medium	Black	Sweet	Semi-Dry
+11	Mabroom	25	Saudi Arabia	Kharj	Medium	Dark Brown	Honey	Soft
+12	Ajwa	40	Saudi Arabia	Madinah	Small	Black	Sweet	Semi-Dry
+13	Amber	20	Saudi Arabia	Madinah	Medium	Brown	Sweet	Semi-Dry
+14	Safawi	14	Saudi Arabia	Madinah	Small	Black	Syrupy	Semi-Dry
+15	Barhi	10	Saudi Arabia	Jeddah	Small	Yellow	Oversweet	Dry
+16	Saghai	15	Saudi Arabia	Riyadh	Small	Brown	Sweet	Soft
+17	Khudri	8	Saudi Arabia	Riyadh	Small	Dark Brown	Sour	Dry
+18	Sukkari	12	Saudi Arabia	Qaseem	Small	Brown	Oversweet	Dry
+19	Zahidi	10	Saudi Arabia	Qaseem	Small	Yellow	Oversweet	Soft
+20	Medjoor	12	Saudi Arabia	Jeddah	Medium	Brown	Sweet	Soft
+21	Kholas	8	Saudi Arabia	Kharj	Small	Black	Sweet	Semi-Dry
+22	Piarom	15	Iran	Hormozgan	Large	Dark Brown	Sour	Semi-Dry
+23	Allmehtari 	20	Iran	Hormozgan	Small	Yellow	Sweet	Soft
+24	Barhi	5	Iran	Khuzestan	Small	Brown	Sweet	Soft
+25	Dayri	20	Iran	Khuzestan	Large	Dark Brown	Syrupy	Dry
+26	Gantar	25	Iran	Khuzestan	Large	Brown	Syrupy	Soft
+27	Kabkab	10	Iran	Busheher	Large	Dark Brown	Syrupy	Soft
+28	Khassui	12	Iran	Busheher	Small	Light Brown	Sweet	Soft
+29	Khazravi	15	Iran	Khuzestan	Small	Light Brown	Primings	Semi-Dry
+30	Mazafati	14	Iran	Kerman	Medium	Dark Brown	Oversweet	Soft
+31	Mazafati	12	Iran	Sistan	Medium	Black	Sweet	Soft
+32	Rabbi	8	Iran	Sistan	Large	Dark Brown	Sweet	Semi-Dry
+33	Sayer	8	Iran	Khuzestan	Medium	Brown	Primings	Semi-Dry
+34	Shahani	10	Iran	Fars	Large	Brown	Sweet	Semi-Dry
+35	Zahedi	12	Iran	Busheher	Medium	Yellow	Sour	Dry
+36	Zahedi	10	Iran	Fars	Medium	Brown	Honey	Semi-Dry
+37	Kholas	10	Emirates	Al Ain	Medium	Brown	Oversweet	Semi-Dry
+38	Fard	5	Emirates	Al Ain	Medium	Dark Brown	Sweet	Soft
+39	Lulu	20	Emirates	Al Ain	Small	Dark Brown	Sweet	Semi-Dry
+40	Bumaan	12	Emirates	Al Ain	Small	Black	Syrupy	Semi-Dry
+41	Khadrawi	14	Emirates	Al Ain	Medium	Brown	Oversweet	Semi-Dry
+42	Razaiz	10	Emirates	Al Ain	Medium	Dark Brown	Sweet	Dry
+43	Dabbas	8	Emirates	Liwa	Medium	Brown	Sweet	Semi-Dry
+44	Dekheni	5	Emirates	Liwa	Large	Brown	Honey	Dry
+45	Khenezi	8	Emirates	Liwa	Small	Black	Sweet	Semi-Dry
+46	Wanana	5	Emirates	Liwa	Medium	Light Brown	Syrupy	Dry
+47	Barhi	6	Emirates	Abu Dhabi	Medium	Yellow	Honey	Dry
+48	Khenaizi	8	Emirates	Abu Dhabi	Medium	Black	Syrupy	Semi-Dry
+49	Khasab	5	Emirates	Abu Dhabi	Small	Brown	Primings	Dry
