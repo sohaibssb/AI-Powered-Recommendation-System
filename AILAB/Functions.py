@@ -11,8 +11,8 @@ import random
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-
-
+import json
+from pprint import pprint
 
 
 #“не найдено точного соответствия, однако, возможно, Вам понравится”
@@ -23,16 +23,16 @@ from nltk.corpus import stopwords
 base_path = "/home/sohiab/IntelligentLab1/AILab1DataSet.ods"
 sheet_index = 1
 
-data = read_ods(base_path, 1, columns=["No.","Имя", "Цена($)/Кг","Страна","Регион","Размер","Цвет","Сладость","жесткость/влажность"])
+data = read_ods(base_path, 1, columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
 
-DataFrame = pd.DataFrame(data,columns=["No.","Имя", "Цена($)/Кг","Страна","Регион","Размер","Цвет","Сладость","жесткость/влажность"])
+DataFrame = pd.DataFrame(data,columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
 
 UpdateD = DataFrame
 
 #///////////////////////////////////////////////////////////////////////////////
 #///////Get Similarity between all sets - jaccard_similarity///////////////////
 print("///////////////////////////////////////////////////////////////////")
-print('Получить сходство между всеми наборами - жаккардовое сходство:')
+#print('Получить сходство между всеми наборами - жаккардовое сходство:')
 print("///////////////////////////////////////////////////////////////////\n")
 
 AnB = 0;
@@ -56,7 +56,7 @@ for i in range(0,49):
                                 #similarityDis.append((AUB-AnB)/AUB)
                                 if Simi >= 0.2 and Simi <= 1:
                                     Si = int(Simi*100)
-                                    print(f'item#:{i} and item#:{iv} There Similarity is {Si}%')
+                                    #print(f'item#:{i} and item#:{iv} There Similarity is {Si}%')
                             
             
 #print(similarity)  
@@ -82,7 +82,7 @@ UpdateD['Регион']=labelencoder.fit_transform(UpdateD['Регион'])
 UpdateD['Размер']=labelencoder.fit_transform(UpdateD['Размер'])
 UpdateD['Цвет']=labelencoder.fit_transform(UpdateD['Цвет'])
 UpdateD['Сладость']=labelencoder.fit_transform(UpdateD['Сладость'])
-UpdateD['жесткость/влажность']=labelencoder.fit_transform(UpdateD['жесткость/влажность'])
+UpdateD['жесткость']=labelencoder.fit_transform(UpdateD['жесткость'])
 
 #матрица корреляции 1:
 
@@ -94,7 +94,7 @@ plt.show()
 #///////////////////Euclidean Distance///////////////////////////////////////
 print("///////////////////////////////////////////////////////////////////")
 #The Euclidean Distance between all rows in data:
-print('Евклидово расстояние между всеми строками данных:')
+#print('Евклидово расстояние между всеми строками данных:')
 print("///////////////////////////////////////////////////////////////////\n")
 
 def euclidean_distance(r1, r2):
@@ -159,28 +159,28 @@ for i in range(0,4):
 #///////////////////Distance Between Two Object///////////////////////////////////////
 print("///////////////////////////////////////////////////////////////////")
 #The Euclidean Distance between Two object:
-print('Евклидово расстояние между двумя объектами:')
+#print('Евклидово расстояние между двумя объектами:')
 print("///////////////////////////////////////////////////////////////////\n")
-
+'''
 for i in range(0,4):
     for iv in range(1,5):
         v1=UpdateD.iloc[i,8]
         v2=UpdateD.iloc[iv,8]
         Vdiff = abs(v2-v1)
         if Vdiff == 0:
-             print(f'жесткость/влажность объект#:{i} и объект#:{iv} похожий')
+             #print(f'жесткость объект#:{i} и объект#:{iv} похожий')
         elif Vdiff == 1:
-             print(f'жесткость/влажность объект#:{i} и объект#:{iv} так близко')
+             #print(f'жесткость объект#:{i} и объект#:{iv} так близко')
         else:
-             print(f'жесткость/влажность объект#:{i} и объект#:{iv} не похоже')
+             #print(f'жесткость объект#:{i} и объект#:{iv} не похоже')
 
-
+'''
 #///////////////////////////////////////////////////////////////////////
 
 #///////////////////////////////////////////////////////////////////////
 # Get Similarity Distance between two row - Jaccard
 print("///////////////////////////////////////////////////////////////////")
-print('Получить расстояние сходства между двумя строками - Жаккард:')
+#print('Получить расстояние сходства между двумя строками - Жаккард:')
 print("///////////////////////////////////////////////////////////////////\n")
 
 
@@ -216,7 +216,7 @@ for i in range(0,4):
 #/////////////////////////////////////////////////////////////////////////////////////
 #///////////////////Cosine Similarity between Prices Object///////////////////////////////////////
 print("///////////////////////////////////////////////////////////////////")
-print('Косинусное сходство между ценовыми объектами:')
+#print('Косинусное сходство между ценовыми объектами:')
 print("///////////////////////////////////////////////////////////////////\n")
 
 def cosine_similarity(v1,v2):
@@ -287,7 +287,7 @@ def similarity(AllData,Datar,m):
 
     Simi=list()
     LL = len(distances)
-    print(LL)
+    #print(LL)
 
     for i in range(LL):
 
@@ -313,7 +313,7 @@ def similarity2(AllData,Datar):
 
     Simi=list()
     LL = len(distances)
-    print(LL)
+    #print(LL)
 
     for i in range(LL):
 
@@ -455,11 +455,11 @@ def DisLikeList(AllData,Datars):
 #//////////////////////////Dataset///////////////////////////////////////////////////////////////
 
 
-datasetPrice=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i]] for i in range(0,49)]
+datasetPrice=[[UpdateD['Имя'][i],UpdateD['Цена'][i]] for i in range(0,49)]
 
-datasetFF=[[UpdateD['Имя'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость/влажность'][i]] for i in range(0,49)]
+datasetFF=[[UpdateD['Имя'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость'][i]] for i in range(0,49)]
 
-dataset=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i],UpdateD['Страна'][i],UpdateD['Регион'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость/влажность'][i]] for i in range(0,49)]
+dataset=[[UpdateD['Имя'][i],UpdateD['Цена'][i],UpdateD['Страна'][i],UpdateD['Регион'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость'][i]] for i in range(0,49)]
 
 datasetCountry=[[UpdateD['Имя'][i],UpdateD['Страна'][i]] for i in range(0,49)]
 
@@ -473,19 +473,15 @@ print("///////////////////////////////////////////////////////////////////\n")
 while True:
   
     try:
-        Enter=int(input('Пожалуйста,\n\n нажмите 1 если хотите искать по одному объекту \n\n нажмите 2 если хотите по списку лайков \n\n нажмите 3 если хотите по списку дизлайков\n\n нажмите 4 если вы хотите умный диалог \n\n Для выхода нажмите 0 \n\n ---->> '))
+        Enter=int(input('Пожалуйста,\n\n нажмите 1 если хотите искать по одному объекту \n\n нажмите 2 если хотите по списку лайков \n\n нажмите 3 если хотите по списку дизлайков\n\n нажмите 4 для параметрического поиска по фильтрам \n\n нажмите 5 если вы хотите умный диалог \n\n Для выхода нажмите 0 \n\n ---->> '))
     except ValueError:
         print("//////////////////////Error !! /////////////////////////////////")
         print("Пожалуйста, введите только цифры из списка ниже !!")
         print("///////////////////////////////////////////////////////////////\n")
-        continue
-       
-    
-    
+        continue    
     ii =0
     ff = 49
     if Enter==1:
-
                 Date=UpdateD['Имя'].to_list()
                 NDate1 = Date[0:15]
                 NDate2 = Date[16:31]    
@@ -518,8 +514,8 @@ while True:
 
                             break
                     
-                    print(UpdateD)
-                    SimiData1={'Подобие-евклидово по Размер, Цвет, Сладость и жесткость/влажность':similarity(datasetFF, datasetFF[index],'a')}
+                    #print(UpdateD)
+                    SimiData1={'Подобие-евклидово по Размер, Цвет, Сладость и жесткость':similarity(datasetFF, datasetFF[index],'a')}
                     SimiData2={'Сходство-евклидово по Цена($)/Кг':similarity(datasetPrice, datasetPrice[index],'p')}
                    
                     
@@ -588,7 +584,7 @@ while True:
                 k=1
                 for k in range(0,49):
                 
-                    print("<<Пожалуйста, введите финик, которая вам нравится>>")
+                    print("<<Пожалуйста, введите финик, которая вам нравится:")
 
                     ListOfNames = input(f"\n --> Нравится номер {k}: ")
                     ListDates.append(ListOfNames)
@@ -642,7 +638,7 @@ while True:
                 else:
 
                         
-                    dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость/влажность'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
+                    dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
 
                     print('\n Рекомендуемые финики для вас:\n')
 
@@ -667,7 +663,7 @@ while True:
                 k=1
                 for k in range(0,49):
                 
-                    print("<<Пожалуйста, введите финик, которая вам не нравится>>")
+                    print("<<Пожалуйста, введите финик, которая вам не нравится:")
 
                     ListOfNames = input(f"\n --> Не Нравится номер {k}: ")
                     DListDates.append(ListOfNames)
@@ -718,7 +714,7 @@ while True:
 
                 
 
-                    dataset_tests=dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость/влажность'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
+                    dataset_tests=dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
 
                     print('\n Рекомендуемые финики не нравится для вас: \n')
 
@@ -734,414 +730,959 @@ while True:
     #/////////////////////////////////////////////////////////////////////////
     #///////////////Filter System//////////////////////////////////////
     #/////////////////////////////////////////////////////////////////////////
-        AllDataFilter = data
-        DataNumberFilter = UpdateD
-        print("///////////////////////////////////////////////////////////////////")
-        print("///////////////////////////////////////////////////////////////////")
-        print('                           Финики                                  ')
-        print('             Рекомендательная система - Фильтр                     ')
-        print("///////////////////////////////////////////////////////////////////\n")
-      
-        LikeList = []
-        DisLikeList = []
-        LikeList2 = []
-        DisLikeList2 = []
-        datasetLike2=pd.DataFrame(columns=['Имя','Цена($)/Кг','Страна','Регион','Размер','Цвет','Сладость','жесткость/влажность'], index=range(0, 49))
+            AllDataFilter = data
+            DataNumberFilter = UpdateD
+            print("///////////////////////////////////////////////////////////////////")
+            print("///////////////////////////////////////////////////////////////////")
+            print('                           Финики                                  ')
+            print('                  Рекомендательная система                         ')
+            print('            параметрического поиска по фильтрам                    ')
+            print("///////////////////////////////////////////////////////////////////\n")
         
-        #вопрос - Country /////////////
+            LikeList = []
+            DisLikeList = []
+            LikeList2 = []
+            DisLikeList2 = []
+            #datasetLike2=pd.DataFrame(columns=['Имя','Цена($)/Кг','Страна','Регион','Размер','Цвет','Сладость','жесткость/влажность'], index=range(0, 49))
+            #datasetLike2=pd.DataFrame(columns=['Имя','Страна'], index=range(0, 49))
+            #print(datasetLike2)
 
-        Questioni = input('Вы хотите финики из конкретной страны или из любого места (Да или нет)? >>')
-        Questionii = Questioni.lower()
-        Optioni = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
-        Optionii = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
-        flag = 0 
-        for i in range(0,10):
-                if Optioni[i] in Questionii:
-                    flag = 1    
-                elif Optionii[i] in Questionii:
-                    flag = 2
-
-        if flag == 1:
-
-        #вопрос/////////////
-            Question4 = input('Вам нравится, что это из Саудовской Аравии? >> ')
-
-            Question44 = Question4.lower()
-
-            Option1 = ["да", "согласие", "саудовск","важно","yes", "соглас", "саудов","важн", "da","важ"] 
-            Option2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
-
-            for i in range(0,10):
-                if Option1[i] in Question44:                 
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 1)]
-                    LikeList.append(newDataF)
-                    newDataF2 = data.loc[(data.Страна == "Саудовская Аравия")] 
-                    datasetLike2.append(newDataF2)
-                elif Option2[i] in Question44:
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 1)]
-                    newDataF2 = data.loc[(data.Страна == "Саудовская Аравия")]
-                    DisLikeList2.append(newDataF2)
-                    DisLikeList.append(newDataF)
-                   
-        #вопрос/////////////
-            Question5 = input('Вам нравится, что это из Иран? >>')
-
-            Question55 = Question5.lower()
-
-            Option11 = ["да", "согласие", "Иран","важно","yep", "согл", "y","важн", "da","важ"] 
-            Option22 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
-
-            for i in range(0,10):
-                if Option11[i] in Question55:
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 0)]
-                    newDataF2 = data.loc[(data.Страна == "Иран")] 
-                    datasetLike2.append(newDataF2)
-                    LikeList.append(newDataF)
-                elif Option22[i] in Question55:
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 0)]
-                    newDataF2 = data.loc[(data.Страна == "Иран")]
-                    DisLikeList2.append(newDataF2)
-                    DisLikeList.append(newDataF)
-        #вопрос/////////////
-            Question6 = input('Вам нравится, что это из Эмирейтс? >>')
-
-            Question66 = Question6.lower()
-
-            Option111 = ["да", "согласие", "Эмирейтс","важно","yep", "согл", "y","важн", "da","важ"] 
-            Option222 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
-
-            for i in range(0,10):
-                if Option111[i] in Question66:
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 2)]
-                    LikeList.append(newDataF)
-                    newDataF2 = data.loc[(data.Страна == "Эмирейтс")] 
-                    datasetLike2.append(newDataF2)
-                elif Option222[i] in Question66:
-                    newDataF = UpdateD.loc[(UpdateD.Страна == 2)]
-                    newDataF2 = data.loc[(data.Страна == "Эмирейтс")]
-                    DisLikeList2.append(newDataF2)
-                    DisLikeList.append(newDataF)
-
-        #вопрос - Region /////////////
-            
-            Question2  = input('Вы хотите искать по региону страны? (Да или нет)? >>')
-          
-            Questioni2 = Question2.lower()
-            Optioni2 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
-            Optionii2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
-            flag = 0 
-            for i in range(0,10):
+            #вопрос - Country /////////////
+            Testss = 0
+            while Testss == 0:
+                Questioni = input('Вы хотите финики из конкретной страны или из любого места (Да или нет)? >> ')
+                Questionii = Questioni.lower()
+                Optioni = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                Optionii = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                Sign = 0 
+                for i in range(0,10):
                     if Optioni[i] in Questionii:
-                        flag = 1    
+                        Sign = 1   
+                        Testss = 1 
+                        break
                     elif Optionii[i] in Questionii:
-                        flag = 2
+                        LikeList.append(UpdateD)
+                        LikeList2.append(data)
+                        Sign = 2
+                        Testss = 1
+                        break 
+                    else: 
+                        Testss = 0
+                if Testss == 0:
+                        print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                else:
+                    break
 
-            if flag == 1:
+            if Sign == 1:
 
             #вопрос/////////////
-                RegionData=datasetLike2['Регион'].to_list()
-                RD = list(dict.fromkeys(RegionData))
-                print(RD)
-                print("Пожалуйста, выберите регионы из списка ниже: \n ")
-                j=1
-                for i in range(len(RD)):
-                   
-                   print(f"Регион#{+j}")
-                   print(RD[i])
-                   print("\n")
-                   j=j+1
+                Testss = 0
+                while Testss == 0:
+                    Question4 = input('Вам нравится, что это из Саудовской Аравии? >> ')
 
-                Questioni2 = input(' \n---->')
+                    Question44 = Question4.lower()
 
-                Question44 = Questioni2.lower()
+                    Option1 = ["да", "согласие", "саудовск","важно","yes", "соглас", "саудов","важн", "da","важ"] 
+                    Option2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
 
-                Option1 = ["да", "согласие", "саудовск","важно","yes", "соглас", "саудов","важн", "da","важ"] 
-                Option2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
-
-                for i in range(0,10):
-                    if Option1[i] in Question44:                 
-                        newDataF = UpdateD.loc[(UpdateD.Страна == 1)]
-                        LikeList.append(newDataF)
+                    for i in range(0,10):
+                        if Option1[i] in Question44:                 
+                            newDataF = UpdateD.loc[(UpdateD.Страна == 1)]
+                            #newDataFTT = UpdateD.loc[(UpdateD.Страна == 0)]
+                            #newitem = list(filter(newDataFTT,DataNumberFilter))
+                            LikeList.append(newDataF)
+                            #newDataF2 = data.loc[(data.Страна == "Саудовская Аравия"),(data.Страна == "Иран"),(data.Страна == "Эмирейтс")] 
+                            #datasetLike2.append(newDataF2)
+                            newdf1 = data.loc[(data.Страна == "Саудовская Аравия")] 
+                            LikeList2.append(newdf1)
+                            Sign  = 1
+                            Testss = 1
+                            break
+                        elif Option2[i] in Question44:
+                            newDataF = UpdateD.loc[(UpdateD.Страна == 1)]
+                            DisLikeList.append(newDataF)
+                            newDataF2 = data.loc[(data.Страна == "Саудовская Аравия")]
+                            DisLikeList2.append(newDataF2)
+                            Sign  = 1
+                            Testss = 1
+                            break
+                        else:
+                            Testss = 0
+                    if Testss == 0:   
+                         print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
                     else:
-                        continue
-                       
-           
+                        break 
+                if Sign == 1:
+                    #вопрос/////////////
+                    Testss = 0
+                    while Testss == 0:
+                            Question5 = input('Вам нравится, что это из Иран? >> ')
 
+                            Question55 = Question5.lower()
 
-        #второй вопрос/////////////
-        Test = 0
-        while Test == 0:
+                            Option11 = ["да", "согласие", "Иран","важно","yep", "согл", "y","важн", "da","важ"] 
+                            Option22 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
 
-            Question2 = input('Какие финики самое сладкий ? \n')
-            Question22 = Question2.lower()
-        
-            sweetness11 = ["слишк", "очен", "чересчур", "приторно"] #слова-синонимы
-            sweetness12 = ["сладк", "сладк", "сладк", ""]
-            sweetness22 = ["сладкий", "сладк", "конфе", "конф"]
-            sweetness33 = ["сироп", "сиро", "сиропы", "сир"]
-            sweetness44 = ["прайминги", "прайминг", "грунтовки", "грунтов"]
-            sweetness55 = ["медовый", "мед", "мёд", "медо"]
-            sweetness66 = ["кислый", "кисл", "прокисший", "прокисш"]
+                            for i in range(0,10):
+                                if Option11[i] in Question55:
+                                    newDataF = UpdateD.loc[(UpdateD.Страна == 0)]
+                                    LikeList.append(newDataF)
+                                    newDataF2 = data.loc[(data.Страна == "Иран")] 
+                                    LikeList2.append(newDataF2)
+                                    Sign  = 1
+                                    Testss = 1
+                                    break
+                                    #datasetLike2.append(newDataF2)                                       
+                                elif Option22[i] in Question55:
+                                    newDataF = UpdateD.loc[(UpdateD.Страна == 0)]
+                                    DisLikeList.append(newDataF)
+                                    newDataF2 = data.loc[(data.Страна == "Иран")]
+                                    DisLikeList2.append(newDataF2)
+                                    Sign  = 1
+                                    Testss = 1
+                                    break
+                                else:
+                                    Testss = 0
+                            if Testss == 0:   
+                                print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                            else:
+                                break 
+                if Sign == 1:  
+            #вопрос/////////////
+                        Testss = 0
+                        while Testss == 0:
+                                Question6 = input('Вам нравится, что это из Эмирейтс? >> ')
 
+                                Question66 = Question6.lower()
 
-            for i in range(0,4):
-                if sweetness11[i] in Question22 and sweetness11[i] in Question22:
-                    LikeList.append("слишком сладкий")
-                    Test = 1
-                if sweetness22[i] in Question22:
-                    LikeList.append("сладкий")
-                    Test = 1
-                if sweetness33[i] in Question22:
-                    LikeList.append("сироп")
-                    Test = 1
-                if sweetness44[i] in Question22:
-                    LikeList.append("прайминги")
-                    Test = 1
-                if sweetness55[i] in Question22:
-                    LikeList.append("медовый")
-                    Test = 1
-                    LikeList.append("кислый")
-                if sweetness66[i] in Question22:
-                    Test = 1
-            
-            if Test == 1:
-                break
-            print("Не могли бы вы подробнее объяснить!!")
+                                Option111 = ["да", "согласие", "Эмирейтс","важно","yep", "согл", "y","важн", "da","важ"] 
+                                Option222 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
 
-        #Третий вопрос/////////////Price//////
-        '''
-        Test = 0
-        while Test == 0:
+                                for i in range(0,10):
+                                    if Option111[i] in Question66:
+                                        newDataF = UpdateD.loc[(UpdateD.Страна == 2)]
+                                        LikeList.append(newDataF)
+                                        newDataF2 = data.loc[(data.Страна == "Эмирейтс")] 
+                                        LikeList2.append(newDataF2)
+                                        Sign  = 2
+                                        Testss = 1
+                                        break
+                                    elif Option222[i] in Question66:
+                                        newDataF = UpdateD.loc[(UpdateD.Страна == 2)]
+                                        DisLikeList.append(newDataF)
+                                        newDataF2 = data.loc[(data.Страна == "Эмирейтс")]
+                                        DisLikeList2.append(newDataF2)
+                                        Sign  = 2
+                                        Testss = 1
+                                        break
+                                    else:
+                                        Testss = 0
+                                if Testss == 0:   
+                                    print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                                else:
+                                    break 
+            if Sign == 2:  
+                            print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                            for k in range(len(LikeList2)):
+                                print(LikeList2[k])
+                                print("-------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n")
+                            #вопрос - Region /////////////
+                            RegionList = []
+                            RegionList2 = []
+                            RegionData = []
+                            RD = []
+                            Question2  = input('Вы хотите искать по региону страны? (Да или нет)? >> ')
+                        
+                            Questioni22 = Question2.lower()
+                            Optioni2 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                            Optionii2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                            Sign = 0 
+                            for i in range(0,10):
+                                    if Optioni2[i] in Questioni22:
+                                        Sign = 1    
+                                    elif Optionii2[i] in Questioni22:
+                                        RegionList.append(LikeList2)
+                                        RegionList2 = LikeList2
+                                        
+                            
 
-            Question3 = int(input('Какой ценовой диапазон предпочитаете? Пожалуйста, выберите из списка ниже: \n 1- от 5$ до 20$\n 2- от 20$ до 30$\n 3- от 30$ до 45$\n'))
+                            if Sign == 1:
+                                Sign = 0
+                                for i in range(len(LikeList2)):
+                                
+                                    RegDa=LikeList2[i]['Регион'].to_list()
+                                    RegionData.append(RegDa)
 
+                                #for j in range(len(RegionData)):
+                                    #RDD = list(dict.fromkeys(RegionData[j]))
+                                    #RD.append(RDD)
+                            
+                                TT = []
+                                for ii in range(len(RegionData)):
+                                    TT = TT+ RegionData[ii]
+                    
 
-            if Question3 == 1:
-                LikeList.append("недорогой")
-                Test = 1
-            elif Question3 == 2:
-                LikeList.append("средний") 
-                Test = 1
-            elif Question3 == 3:
-                LikeList.append("дорогой")
-                Test = 1
+                                RDnew = list(dict.fromkeys(TT))
 
-            if Test == 1:
-                break 
+                                print("Пожалуйста, выберите Регионы из списка ниже по имени: \n ")
+                                N=1
+                                print("-------------")
+                                for i in range(len(RDnew)):
+                                        print(f"Регион#{+N}")
+                                        pprint(RDnew[i])
+                                        print("-------------")
+                                        N=N+1
+                                T = 0
+                                B = 0
+                                count = len(RDnew)
+                                Ques = []
+                                while T == 0:
+                                        while B == 0:
+                                            Questioni2 = input(' \n Войти Регион ----> ')
+                                            if Questioni2 == Ques:
+                                                print("Он уже выбран!! пожалуйста, введите другой!!")
+                                            else:
+                                                B=1
+                                        B=0    
+                                        if Questioni2 in RDnew:
+                                            for y in range(len(LikeList2)):
+                                                REGD = LikeList2[y].loc[(LikeList2[y].Регион == Questioni2)] 
+                                                #REGD = data.loc[(data.Регион == Questioni2)] 
+                                                RegionList.append(REGD)
+                                                RegionList2.append(REGD)
+                                            T =1
+                                            count = count -1
+                                            Ques = Questioni2
+                                            if count == 0:
+                                                T=1
+                                                break
+                                        else:
+                                            print("Пожалуйста, введите название региона из списка !!")
+                                        if T == 1:
+                                            try:
+                                                T=0
+                                                ss = int(input("Если вы хотите продолжить добавление региона, нажмите 1, иначе нажмите 0: >> "))
+                                            except ValueError:
+                                                    print("--Error !! --")
+                                                    print("Пожалуйста, введите только цифры !!")
+                                                    continue
+                                            if ss == 0:
+                                                break
+                                print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                                for k in range(len(RegionList2)):
+                                    print(RegionList2[k])
+                                    print("-------------------------------------------------------------------------------------------------------------------\n")
+                                    print("\n")
+                            if Sign == 0:        
+                                    #вопрос - Size /////////////
+                                    SizeData = []
+                                    SD = []
+                                    SizeList = []
+                                    SizeList2 = []
+                                            
+                                    Question3  = input('Вы хотите искать по Размер? (Да или нет)? >> ')
+                                
+                                    Questioni33 = Question3.lower()
+                                    Optioni3 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                                    Optionii3 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                                    Sign = 0 
+                                    for i in range(0,10):
+                                            if Optioni3[i] in Questioni33:
+                                                Sign = 1    
+                                            elif Optionii3[i] in Questioni33:
+                                                SizeList.append(RegionList2)
+                                                SizeList2 = RegionList2
+                                                
 
-            print("пожалуйста, введите правильный ввод!!")
-        '''
-        #Третий вопрос///////
+                                    if Sign == 1:              
+                                                Sign = 0
+                                                for i in range(len(RegionList2)):
+                                                
+                                                    RegDa=RegionList2[i]['Размер'].to_list()
+                                                    SizeData.append(RegDa)
+                                                
+                                                TT = []
+                                                for ii in range(len(SizeData)):
+                                                    TT = TT+ SizeData[ii]
+                                    
 
-        Test = 0
-        while Test == 0:
+                                                SD = list(dict.fromkeys(TT))
+                                        
+                                                N=1
+                                                print("Пожалуйста, выберите Размер из списка ниже по имени: \n ")
+                                                print("-------------")
+                                                for i in range(len(SD)):
+                                                        print(f"Размер#{+N}")
+                                                        pprint(SD[i])
+                                                        print("-------------")
+                                                        N=N+1
+                                                T = 0
+                                                B = 0
+                                                count = len(SD)
+                                                Ques = []
 
-            Question4 = input('Вам нравится, чтобы он был большим или средним?\n')
+                                                while T == 0:
+                                                        while B == 0:
+                                                            Questioni2 = input(' \n Войти Размер ----> ')
+                                                            if Questioni2 == Ques:
+                                                                print("Он уже выбран!! пожалуйста, введите другой!!")
+                                                            else:
+                                                                B=1
+                                                        B=0    
+                                                        if Questioni2 in SD:
+                                                            for y in range(len(RegionList2)):
+                                                                REGD = RegionList2[y].loc[(RegionList2[y].Размер == Questioni2)] 
+                                                                #REGD = data.loc[(data.Размер == Questioni2)] 
+                                                                SizeList.append(REGD)
+                                                                SizeList2.append(REGD)
+                                                            T =1
+                                                            count = count -1
+                                                            Ques = Questioni2
+                                                            if count == 0:
+                                                                T=1
+                                                                break
+                                                        else:
+                                                            print("Пожалуйста, введите название размера из списка !!")
+                                                        if T == 1:
+                                                            try:
+                                                                T=0
+                                                                ss = int(input("Если вы хотите продолжить добавление размера, нажмите 1, иначе нажмите 0: >> "))
+                                                            except ValueError:
+                                                                    print("--Error !! --")
+                                                                    print("Пожалуйста, введите только цифры !!")
+                                                                    continue
+                                                            if ss == 0:
+                                                                break      
+                                        
+                                                print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                                                for k in range(len(SizeList2)):
+                                                    print(SizeList2[k])
+                                                    print("-------------------------------------------------------------------------------------------------------------------\n")
+                                                    print("\n")
+                                    if Sign == 0:             
+                                                #вопрос - Color /////////////
+                                                ColorList = []
+                                                ColorList2 = []
+                                                ColorData = []
+                                                CD = []
+                                                Question4  = input('Вы хотите искать по Цвет? (Да или нет)? >> ')
+                                            
+                                                Questioni44 = Question4.lower()
+                                                Optioni4 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                                                Optionii4 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                                                Sign = 0 
+                                                for i in range(0,10):
+                                                        if Optioni4[i] in Questioni44:
+                                                            Sign = 1    
+                                                        elif Optionii4[i] in Questioni44:
+                                                            ColorList.append(SizeList2)
+                                                            ColorList2 = SizeList2
+                                                            Sign = 0
+                                                if Sign == 1:
+                                                    Sign = 0
+                                                    for i in range(len(SizeList2)):
+                                                    
+                                                        RegDa=SizeList2[i]['Цвет'].to_list()
+                                                        ColorData.append(RegDa)
+                                                    
+                                                    TT = []
+                                                    for ii in range(len(ColorData)):
+                                                        TT = TT+ ColorData[ii]
 
-            if Question4 == 1:
-                LikeList.append("недорогой")
-                Test = 1
-            elif Question4 == 2:
-                LikeList.append("средний") 
-                Test = 1
-            elif Question4 == 3:
-                LikeList.append("дорогой")
-                Test = 1
+                                                    CD = list(dict.fromkeys(TT))
+                                                
+                                                    N=1
+                                                    print("Пожалуйста, выберите Цвет из списка ниже по имени: \n ")
+                                                    print("-------------")
+                                                    for i in range(len(CD)):
+                                                            print(f"Цвет#{+N}")
+                                                            pprint(CD[i])
+                                                            print("-------------")
+                                                            N=N+1
+                                                
+                                                    T = 0
+                                                    B = 0
+                                                    count = len(TT)
+                                                    Ques = []
+                                                    while T == 0:
+                                                            while B == 0:
+                                                                Questioni2 = input(' \n Войти Цвет ----> ')
+                                                                if Questioni2 == Ques:
+                                                                    print("Он уже выбран!! пожалуйста, введите другой!!")
+                                                                else:
+                                                                    B=1
+                                                            B=0    
+                                                            if Questioni2 in TT:
+                                                                for y in range(len(SizeList2)):
+                                                                    REGD = SizeList2[y].loc[(SizeList2[y].Цвет == Questioni2)] 
+                                                                    #REGD = data.loc[(data.Цвет == Questioni2)] 
+                                                                    ColorList.append(REGD)
+                                                                    ColorList2.append(REGD)
+                                                                T =1
+                                                                count = count -1
+                                                                Ques = Questioni2
+                                                                if count == 0:
+                                                                    T=1
+                                                                    break
+                                                            else:
+                                                                print("Пожалуйста, введите название цвета из списка !!")
+                                                            if T == 1:
+                                                                try:
+                                                                    T=0
+                                                                    ss = int(input("Если вы хотите продолжить добавление цвета, нажмите 1, иначе нажмите 0: >> "))
+                                                                except ValueError:
+                                                                        print("--Error !! --")
+                                                                        print("Пожалуйста, введите только цифры !!")
+                                                                        continue
+                                                                if ss == 0:
+                                                                    break         
+                                                    print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                                                    for k in range(len(ColorList2)):
+                                                        print(ColorList2[k])
+                                                        print("-------------------------------------------------------------------------------------------------------------------\n")
+                                                    print("\n")
+                                                if Sign == 0:
+                                                    #вопрос - Sweetness /////////////
+                                                    SweetList = []
+                                                    SweetList2 = []
+                                                    SweetData = []
+                                                    SWD = []
+                                                    Question5  = input('Вы хотите искать по Сладость? (Да или нет)? >> ')
+                                                
+                                                    Questioni55 = Question5.lower()
+                                                    Optioni5 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                                                    Optionii5 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                                                    Sign = 0 
+                                                    for i in range(0,10):
+                                                            if Optioni5[i] in Questioni55:
+                                                                Sign = 1    
+                                                            elif Optionii5[i] in Questioni55:
+                                                                SweetList.append(ColorList2)
+                                                                SweetList2 = ColorList2
+                 
+                                                    if Sign == 1:
+                                                        Sign = 0
+                                                        for i in range(len(ColorList2)):
+                                                        
+                                                            RegDa=ColorList2[i]['Сладость'].to_list()
+                                                            SweetData.append(RegDa)
+                                                        
+                                                        TT = []
+                                                        for ii in range(len(SweetData)):
+                                                            TT = TT+ SweetData[ii]
 
-            if Test == 1:
-                break 
+                                                        SWD = list(dict.fromkeys(TT))
+                                                    
+                                                        N=1
+                                                        print("Пожалуйста, выберите Сладость из списка ниже по имени: \n ")
+                                                        print("-------------")
+                                                        for i in range(len(SWD)):
+                                                                print(f"Сладость#{+N}")
+                                                                pprint(SWD[i])
+                                                                print("-------------")
+                                                                N=N+1
+                                        
+                                                        T = 0
+                                                        B = 0
+                                                        count = len(SWD)
+                                                        Ques = []
+                                                        while T == 0:
+                                                                while B == 0:
+                                                                    Questioni2 = input(' \n Войти Сладость ----> ')
+                                                                    if Questioni2 == Ques:
+                                                                        print("Он уже выбран!! пожалуйста, введите другой!!")
+                                                                    else:
+                                                                        B=1
+                                                                B=0    
+                                                                if Questioni2 in SWD:
+                                                                    for y in range(len(ColorList2)):
+                                                                        REGD = ColorList2[y].loc[(ColorList2[y].Сладость == Questioni2)] 
+                                                                        #REGD = ColorList2.loc[(ColorList2.Сладость == Questioni2)] 
+                                                                        SweetList.append(REGD)
+                                                                        SweetList2.append(REGD)
+                                                                    T =1
+                                                                    count = count -1
+                                                                    Ques = Questioni2
+                                                                    if count == 0:
+                                                                        T=1
+                                                                        break
+                                                                else:
+                                                                    print("Пожалуйста, введите название Сладость из списка !!")
+                                                                if T == 1:
+                                                                    try:
+                                                                        T=0
+                                                                        ss = int(input("Если вы хотите продолжить добавление Сладость, нажмите 1, иначе нажмите 0: >> "))
+                                                                    except ValueError:
+                                                                            print("--Error !! --")
+                                                                            print("Пожалуйста, введите только цифры !!")
+                                                                            continue
+                                                                    if ss == 0:
+                                                                         break       
+                                                        print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                                                        for k in range(len(SweetList2)):
+                                                            print(SweetList2[k])
+                                                            print("-------------------------------------------------------------------------------------------------------------------\n")
+                                                        print("\n")
+                                                    if Sign ==0:
+                                                        #вопрос - hardness/humidity /////////////
+                                                        HardList = []
+                                                        HardList2 = []
+                                                        HardData = []
+                                                        HD = []
+                                                        Question6  = input('Вы хотите искать по жесткость? (Да или нет)? >> ')
+                                                    
+                                                        Questioni66 = Question6.lower()
+                                                        Optioni6 = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                                                        Optionii6 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                                                        Sign = 0 
+                                                        for i in range(0,10):
+                                                                if Optioni6[i] in Questioni66:
+                                                                    Sign = 1    
+                                                                elif Optionii6[i] in Questioni66:
+                                                                    HardList.append(SweetList2)  
+                                                                    HardList2 = SweetList2       
 
-            print("пожалуйста, введите правильный ввод!!")   
+                                                        if Sign == 1:
+                                                            Sign = 0
+                                                            for i in range(len(SweetList2)):
+                                                            
+                                                                RegDa=SweetList2[i]['жесткость'].to_list()
+                                                                HardData.append(RegDa)
+                                                            
+                                                            TT = []
+                                                            for ii in range(len(HardData)):
+                                                                TT = TT+ HardData[ii]
 
+                                                            HD = list(dict.fromkeys(TT))
+                                                        
+                                                            N=1
+                                                            print("Пожалуйста, выберите жесткость из списка ниже по имени: \n ")
+                                                            print("-------------")
+                                                            for i in range(len(HD)):
+                                                                    print(f"жесткость#{+N}")
+                                                                    pprint(HD[i])
+                                                                    print("-------------")
+                                                                    N=N+1
+
+                                                            T = 0
+                                                            B = 0
+                                                            count = len(TT)
+                                                            Ques = []
+                                                            while T == 0:
+                                                                    while B == 0:
+                                                                        Questioni2 = input(' \n Войти жесткость ----> ')
+                                                                        if Questioni2 == Ques:
+                                                                            print("Он уже выбран!! пожалуйста, введите другой!!")
+                                                                        else:
+                                                                            B=1
+                                                                    B=0    
+                                                                    if Questioni2 in TT:
+                                                                        for y in range(len(SweetList2)):
+                                                                            REGD = SweetList2[y].loc[(SweetList2[y].жесткость == Questioni2)] 
+                                                                            #REGD = data.loc[(data.жесткость == Questioni2)] 
+                                                                            HardList.append(REGD)
+                                                                            HardList2.append(REGD)
+                                                                        T =1
+                                                                        count = count -1
+                                                                        Ques = Questioni2
+                                                                        if count == 0:
+                                                                            T=1
+                                                                            break
+                                                                    else:
+                                                                        print("Пожалуйста, введите название жесткость из списка !!")
+                                                                    if T == 1:
+                                                                        try:
+                                                                            T=0
+                                                                            ss = int(input("Если вы хотите продолжить добавление жесткость, нажмите 1, иначе нажмите 0: >> "))
+                                                                        except ValueError:
+                                                                                print("--Error !! --")
+                                                                                print("Пожалуйста, введите только цифры !!")
+                                                                                continue
+                                                                        if ss == 0:
+                                                                            break           
+
+                                                            print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                                                            for k in range(len(HardList2)):
+                                                                print(HardList2[k])
+                                                                print("-------------------------------------------------------------------------------------------------------------------\n")
+                                                                print("\n")
+                 
     elif Enter == 5:
 
-    #/////////////////////////////////////////////////////////////////////////
-    #///////////////Recomindation System//////////////////////////////////////
-    #/////////////////////////////////////////////////////////////////////////
+                print("///////////////////////////////////////////////////////////////////")
+                print("///////////////////////////////////////////////////////////////////")
+                print('                           Финики                                  ')
+                print('                  Рекомендательная система                         ')
+                print('                        умный диалог                               ')
+                print("///////////////////////////////////////////////////////////////////\n")
 
+                #второй вопрос/////////////
+                LikeList5 = []
+                DaiList = data
+                Test = 0
+                Testss = 0
+                Tests = 0
+                while Tests == 0:
+                    Questioni = input('Вы хотите финики из конкретной страны или из любого места (Да или нет)? >> ')
+                    Questionii = Questioni.lower()
+                    Optioni = ["да", "согласие", "yes","важно","yep", "согл", "y","важн", "da","важ"] 
+                    Optionii = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                    Sign = 0 
+                    Testss = 0
+                    for i in range(0,10):
+                        if Optioni[i] in Questionii:
+                            Sign = 1   
+                            Testss = 1 
+                            break
+                        elif Optionii[i] in Questionii:
+                            newDataF = DaiList.loc[(DaiList.Страна == "Саудовская Аравия")]
+                            LikeList5.append(newDataF)
+                            newDataF = DaiList.loc[(DaiList.Страна == "Иран")]
+                            LikeList5.append(newDataF)
+                            newDataF = DaiList.loc[(DaiList.Страна == "Эмирейтс")]
+                            LikeList5.append(newDataF)
+                            Sign = 2
+                            Testss = 1
+                            break 
+                        else: 
+                            Testss = 0
+                    if Testss == 0:
+                            print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                    else:
+                        break
 
-        print("///////////////////////////////////////////////////////////////////")
-        print("///////////////////////////////////////////////////////////////////")
-        print('                           Финики                                  ')
-        print('                  Рекомендательная система                         ')
-        print("///////////////////////////////////////////////////////////////////\n")
-        print("не могли бы вы сказать мне, пожалуйста, как вам нравятся финики ")
-        print("и что вам не нравится на финики \n")
+                if Sign == 1:
+                        Testss = 0
+                        while Testss == 0:
+                            Question4 = input('Вам нравится, что это из Саудовской Аравии? >> ')
 
-        LikeList = []
-        DisLikeList = []
+                            Question44 = Question4.lower()
 
-        #вопрос/////////////
+                            Option1 = ["да", "согласие", "саудовск","важно","yes", "соглас", "саудов","важн", "da","важ"] 
+                            Option2 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
 
-        Questioni = input('Вы хотите финики из конкретной страны или из любого места (Да или нет)? >>')
-        Questionii = Questioni.lower()
-        Optioni = ["да", "согласие", "yes","важно"] 
-        Optionii = ["нет", "не", "No","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
-        flag = 0 
-        for i in range(0,3):
-                if Optioni[i] in Questionii:
-                    flag = 1    
-                elif Optionii[i] in Questionii:
-                    flag = 2
+                            for i in range(0,10):
+                                if Option1[i] in Question44:                 
+                                    newDataF = DaiList.loc[(DaiList.Страна == "Саудовская Аравия")]
+                                    LikeList5.append(newDataF)
+                                    Sign  = 1
+                                    Testss = 1
+                                    break
+                                elif Option2[i] in Question44:
+                                    newDataF2 = data.loc[(data.Страна == "Саудовская Аравия")]
+                                    #DisLikeList2.append(newDataF2)
+                                    Sign  = 1
+                                    Testss = 1
+                                    break
+                                else:
+                                    Testss = 0
+                            if Testss == 0:   
+                                print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                            else:
+                                break 
+                        if Sign == 1:
+                            #вопрос/////////////
+                            Testss = 0
+                            while Testss == 0:
+                                    Question5 = input('Вам нравится, что это из Иран? >> ')
+                                    Question55 = Question5.lower()
+                                    Option11 = ["да", "согласие", "Иран","важно","yep", "согл", "y","важн", "da","важ"] 
+                                    Option22 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","безразницы"]
+                                    for i in range(0,10):
+                                        if Option11[i] in Question55:
+                                            newDataF2 = data.loc[(data.Страна == "Иран")] 
+                                            LikeList5.append(newDataF2)
+                                            Sign  = 1
+                                            Testss = 1
+                                            break
+                                            #datasetLike2.append(newDataF2)                                       
+                                        elif Option22[i] in Question55:
+                                            newDataF2 = data.loc[(data.Страна == "Иран")]
+                                            Sign  = 1
+                                            Testss = 1
+                                            break
+                                        else:
+                                            Testss = 0
+                                    if Testss == 0:   
+                                        print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                                    else:
+                                        break 
+                        if Sign == 1:  
+                    #вопрос/////////////
+                                Testss = 0
+                                while Testss == 0:
+                                        Question6 = input('Вам нравится, что это из Эмирейтс? >> ')
 
-        if flag == 1:
+                                        Question66 = Question6.lower()
 
-        #вопрос/////////////
-            Question4 = input('Вам нравится, что это из Саудовской Аравии? >>')
+                                        Option111 = ["да", "согласие", "Эмирейтс","важно","yep", "согл", "y","важн", "da","важ"] 
+                                        Option222 = ["нет", "не", "no","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
 
-            Question44 = Question4.lower()
+                                        for i in range(0,10):
+                                            if Option111[i] in Question66:
+                                                newDataF2 = data.loc[(data.Страна == "Эмирейтс")] 
+                                                LikeList5.append(newDataF2)
+                                                Sign  = 2
+                                                Testss = 1
+                                                break
+                                            elif Option222[i] in Question66:
+                                                newDataF2 = data.loc[(data.Страна == "Эмирейтс")]
+                                                Sign  = 2
+                                                Testss = 1
+                                                break
+                                            else:
+                                                Testss = 0
+                                        if Testss == 0:   
+                                            print("Ошибка !! мы не можем вас понять, пожалуйста, введите еще раз !!")
+                                        else:
+                                            break 
+                '''
+                print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                for k in range(len(LikeList5)):
+                        print(LikeList5[k])
+                        print("-------------------------------------------------------------------------------------------------------------------\n")
+                        print("\n")
+                '''      
 
-            Option1 = ["да", "согласие", "саудовск","важно"] 
-            Option2 = ["нет", "не", "No","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                while Test == 0:
+                        Sweet5 = []
+                        LikeList51 = []
+                        print('Какие финики самое сладкий ? \n')
+                        print("(Намекать: слишком сладкий, сладкий, сироп, прайминги, медовый, кислый)\n")
+                        Question2 = input(' ---->>>> ')
+                        Question22 = Question2.lower()
+                    
+                        sweetness11 = ["слишком", "слишк", "очен", "чересчур", "приторно"] #слова-синонимы
+                        sweetness12 = ["сладкий", "сладк", "сладк", "сладк", " "]
+                        sweetness22 = ["сладкий", "сладк", "конфе", "конф"]
+                        sweetness33 = ["сироп", "сиро", "сиропы", "сир"]
+                        sweetness44 = ["прайминги", "прайминг", "грунтовки", "грунтов"]
+                        sweetness55 = ["медовый", "мед", "мёд", "медо"]
+                        sweetness66 = ["кислый", "кисл", "прокисший", "прокисш"]
 
-            for i in range(0,3):
-                if Option1[i] in Question44:
-                    LikeList.append("Саудовской Аравии")
-                elif Option2[i] in Question44:
-                    DisLikeList.append("Саудовской Аравии")
-        #вопрос/////////////
-            Question5 = input('Вам нравится, что это из Иран? >>')
+                        TT = 0
+                        for i in range(0,4):
+                            if sweetness11[i] in Question22 and sweetness12[i] in Question22:
+                                for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "слишком сладкий")] 
+                                    Sweet5.append(REGD)
+                                Test = 1
+                                TT = 1
+                            if sweetness22[i] in Question22:
+                                for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "сладкий")] 
+                                    Sweet5.append(REGD)
+                                Test = 1
+                            if sweetness33[i] in Question22:
+                                for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "сироп")] 
+                                    Sweet5.append(REGD)
+                                Test = 1
+                            if sweetness44[i] in Question22:
+                                 for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "прайминги")] 
+                                    Sweet5.append(REGD)
+                                 Test = 1
+                            if sweetness55[i] in Question22:
+                                for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "медовый")] 
+                                    Sweet5.append(REGD)
+                                Test = 1
+                            if sweetness66[i] in Question22:
+                                for y in range(len(LikeList5)):
+                                    REGD = LikeList5[y].loc[(LikeList5[y].Сладость == "кислый")] 
+                                    Sweet5.append(REGD)
+                                Test = 1
+                        
+                        if Test == 1:
+                            break
+                        print("не могу тебя понять, Можешь объяснить подробнее, пожалуйста!?")
 
-            Question55 = Question5.lower()
+                    #Третий вопрос/////////////Price//////
+             
+                if TT == 1:
+                     print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                     print(Sweet5[0])
+                     print("-------------------------------------------------------------------------------------------------------------------\n")
+                else:
+                    print("\n")
+                    print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                    for k in range(len(Sweet5)):
+                        print(Sweet5[k])
+                        print("-------------------------------------------------------------------------------------------------------------------\n")
+                    print("\n")  
+               
+                
+                Test = 0
+                while Test == 0:
+                        Price5 =[]
+                        LikeList51 = []
+                        Pricee = []
+                        NewPricee5 = []
+                        print('Какой ценовой диапазон предпочитаете? Пожалуйста,\n выберите из списка ниже: \n 1- дорогой \n 2- средний \n 3- недорогой\n')
+                        Question3 = int(input(' ---->>>> '))
+                   
+                    #Question3 = int(input('Какой ценовой диапазон предпочитаете? Пожалуйста, выберите из списка ниже: \n 1- от 5$ до 20$\n 2- от 20$ до 30$\n 3- от 30$ до 45$\n'))
+                    
+                        for i in range(len(Sweet5)):
+                                                                    
+                                RegDa=Sweet5[i]['Цена'].to_list()
+                                Pricee.append(RegDa)
 
-            Option11 = ["да", "согласие", "Иран","важно"] 
-            Option22 = ["нет", "не", "No","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                        if Question3 == 1:
+                            for i in range(len(Pricee)):
+                                for j in range(len(Pricee[i])):
+                                    if Pricee[i][j] >= 30:
+                                        PP = Pricee[i][j]
+                                        REGD = Sweet5[i].loc[(Sweet5[i].Цена == PP)] 
+                                        NewPricee5.append(REGD)
+                            Test = 1
+                        elif Question3 == 2:
+                            for i in range(len(Pricee)):
+                                for j in range(len(Pricee[i])):
+                                    if Pricee[i][j] <= 30 and Pricee[i][j] >= 15:
+                                        PP = Pricee[i][j]
+                                        REGD = Sweet5[i].loc[(Sweet5[i].Цена == PP)] 
+                                        NewPricee5.append(REGD)
+                            Test = 1
+                        elif Question3 == 3:
+                            for i in range(len(Pricee)):
+                                for j in range(len(Pricee[i])):
+                                    if Pricee[i][j] <= 15:
+                                        PP = Pricee[i][j]
+                                        REGD = Sweet5[i].loc[(Sweet5[i].Цена == PP)] 
+                                        NewPricee5.append(REGD)
+                            Test = 1
 
-            for i in range(0,3):
-                if Option11[i] in Question55:
-                    LikeList.append("Иран")
-                elif Option22[i] in Question55:
-                    DisLikeList.append("Иран")
-        #вопрос/////////////
-            Question6 = input('Вам нравится, что это из Эмирейтс? >>')
+                        if Test == 1:
+                            break 
 
-            Question66 = Question6.lower()
+                        print("пожалуйста, введите правильный ввод!!")
 
-            Option111 = ["да", "согласие", "Эмирейтс","важно"] 
-            Option222 = ["нет", "не", "No","не важно", "неважно","безразли","безразлично","без различно","без разницы","без разницы"]
+                  #Третий вопрос///////
+                if NewPricee5[0].empty == False:
+                    print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                    for k in range(len(NewPricee5)):
+                            print(NewPricee5[k])
+                            print("-------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n")
+                
+                Test = 0
+                while Test == 0:
+                #вопрос/////////////
+                        Hard5 = []
+                        print('Какие финики самое мягкий или полусухой или сухой ? \n')
+                        print("(Намекать: мягкий, полусухой, сухой)\n")
+                        Question1 = input(' ---->>>> ')
+                        Question11 = Question1.lower()
+                        #ListAnswer = nltk.word_tokenize(Question11)
+                        ListAnswer = Question11
+                    
 
-            for i in range(0,3):
-                if Option111[i] in Question66:
-                    LikeList.append("Эмирейтс")
-                elif Option222[i] in Question66:
-                    DisLikeList.append("Эмирейтс")
+                        #hardnessList1 = ["мягкий", "легкий", "слабый","мяг", "лег", "сла"] #слова-синонимы
+                        hardnessList1 = ["мяг", "легк", "слаб"] #слова-синонимы
+                        hardnessList2 = ["полусух", "полусух", "полусух"]
+                        hardnessList3 = ["сухой", "суши", "сдержан"]
 
-        #Первый вопрос/////////////
-        Test = 0
-        while Test == 0:
+                        for i in range(0,3):
+                            if hardnessList1[i] in ListAnswer:
+                                for y in range(len(NewPricee5)):
+                                    REGD = NewPricee5[y].loc[(NewPricee5[y].жесткость == "мягкий")] 
+                                    Hard5.append(REGD)
+                                Test = 1
+                            if hardnessList2[i] in ListAnswer:
+                                for y in range(len(NewPricee5)):
+                                    REGD = NewPricee5[y].loc[(NewPricee5[y].жесткость == "полусухой")] 
+                                    Hard5.append(REGD)
+                                Test = 1
+                            if hardnessList3[i] in ListAnswer:
+                                for y in range(len(NewPricee5)):
+                                    REGD = NewPricee5[y].loc[(NewPricee5[y].жесткость == "сухой")] 
+                                    Hard5.append(REGD)
+                                Test = 1
+                        
+                        if Test == 1:
+                            break
+                        print("не могу тебя понять, Можешь объяснить подробнее, пожалуйста!?")
+                if Hard5[0].empty == False:
+                    print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                    for k in range(len(Hard5)):
+                            print(Hard5[k])
+                            print("-------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n")
+                
+                Test = 0
+                while Test == 0:
+                #вопрос/////////////
+                        Size5 = []
+                        print('Какой размер вы предпочитаете ? \n')
+                        print("(Намекать: большой, средний, маленький)\n")
+                        Question1 = input(' ---->>>> ')
+                        Question11 = Question1.lower()
+                        #ListAnswer = nltk.word_tokenize(Question11)
+                        ListAnswer = Question11
+                    
 
-            Question1 = input('Какие финики самое мягкий или полусухой или сухой? >>')
+                        #hardnessList1 = ["мягкий", "легкий", "слабый","мяг", "лег", "сла"] #слова-синонимы
+                        hardnessList1 = ["большой", "больш", "бол", "big"] #слова-синонимы
+                        hardnessList2 = ["средний", "средн", "сре", "medium"]
+                        hardnessList3 = ["маленький", "маленьк", "мале", "small"]
 
-            Question11 = Question1.lower()
-            #ListAnswer = nltk.word_tokenize(Question11)
-            ListAnswer = Question11
-        
+                        for i in range(0,3):
+                            if hardnessList1[i] in ListAnswer:
+                                for y in range(len(Hard5)):
+                                    REGD = Hard5[y].loc[(Hard5[y].Размер == "большой")] 
+                                    Size5.append(REGD)
+                                Test = 1
+                            if hardnessList2[i] in ListAnswer:
+                                for y in range(len(Hard5)):
+                                    REGD = Hard5[y].loc[(Hard5[y].Размер == "средний")] 
+                                    Size5.append(REGD)
+                                Test = 1
+                            if hardnessList3[i] in ListAnswer:
+                                for y in range(len(Hard5)):
+                                    REGD = Hard5[y].loc[(Hard5[y].Размер == "маленький")] 
+                                    Size5.append(REGD)
+                                Test = 1
+                        
+                        if Test == 1:
+                            break
+                        print("не могу тебя понять, Можешь объяснить подробнее, пожалуйста!?")
 
-            #hardnessList1 = ["мягкий", "легкий", "слабый","мяг", "лег", "сла"] #слова-синонимы
-            hardnessList1 = ["мяг", "легк", "слаб"] #слова-синонимы
-            hardnessList2 = ["полусух", "полусух", "полусух"]
-            hardnessList3 = ["сухой", "суши", "сдержан"]
+                #Emp = Size5.empty()
+                #if Emp == True:
+                if Size5[0].empty == False:
 
-            for i in range(0,3):
-                if hardnessList1[i] in ListAnswer:
-                    LikeList.append("мягкий")
-                    Test = 1
-                if hardnessList2[i] in ListAnswer:
-                    LikeList.append("полусухой")
-                    Test = 1
-                if hardnessList3[i] in ListAnswer:
-                    LikeList.append("сухой")
-                    Test = 1
-            
-            if Test == 1:
-                break
-            print("Не могли бы вы подробнее объяснить!!")
+                    print('\n\n --------------------------------- Рекомендуемые финики для вас --------------------------------------------------- \n\n')    
+                    for k in range(len(Size5)):
+                            print(Size5[k])
+                            print("-------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n")
+                if Size5 != ' ':
+                    print('\n\n ---------------- Рекомендуемые финики для вас по выбранной вами цене -------------------------- \n\n')    
+                    for k in range(len(NewPricee5)):
+                            print(NewPricee5[k])
+                            print("-------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n")
 
+                    print("Другие варианты, возможно, вам нравятся:")
+                    print("||||||||||||||||||||||||||||||||||||||||")
 
-        #второй вопрос/////////////
-        Test = 0
-        while Test == 0:
+                    index=random.randint(0,15)
 
-            Question2 = input('Какие финики самое сладкий ? \n')
-            Question22 = Question2.lower()
-        
-            sweetness11 = ["слишк", "очен", "чересчур", "приторно"] #слова-синонимы
-            sweetness12 = ["сладк", "сладк", "сладк", ""]
-            sweetness22 = ["сладкий", "сладк", "конфе", "конф"]
-            sweetness33 = ["сироп", "сиро", "сиропы", "сир"]
-            sweetness44 = ["прайминги", "прайминг", "грунтовки", "грунтов"]
-            sweetness55 = ["медовый", "мед", "мёд", "медо"]
-            sweetness66 = ["кислый", "кисл", "прокисший", "прокисш"]
+                    print('\n')
+                    recommended_dates=LikeOne(dataset,dataset[index])
 
+                    for Simi in recommended_dates:
 
-            for i in range(0,4):
-                if sweetness11[i] in Question22 and sweetness11[i] in Question22:
-                    LikeList.append("слишком сладкий")
-                    Test = 1
-                if sweetness22[i] in Question22:
-                    LikeList.append("сладкий")
-                    Test = 1
-                if sweetness33[i] in Question22:
-                    LikeList.append("сироп")
-                    Test = 1
-                if sweetness44[i] in Question22:
-                    LikeList.append("прайминги")
-                    Test = 1
-                if sweetness55[i] in Question22:
-                    LikeList.append("медовый")
-                    Test = 1
-                    LikeList.append("кислый")
-                if sweetness66[i] in Question22:
-                    Test = 1
-            
-            if Test == 1:
-                break
-            print("Не могли бы вы подробнее объяснить!!")
+                        print(Simi)
 
-        #Третий вопрос/////////////Price//////
-        '''
-        Test = 0
-        while Test == 0:
+                        print('\n')
 
-            Question3 = int(input('Какой ценовой диапазон предпочитаете? Пожалуйста, выберите из списка ниже: \n 1- от 5$ до 20$\n 2- от 20$ до 30$\n 3- от 30$ до 45$\n'))
+                
 
-
-            if Question3 == 1:
-                LikeList.append("недорогой")
-                Test = 1
-            elif Question3 == 2:
-                LikeList.append("средний") 
-                Test = 1
-            elif Question3 == 3:
-                LikeList.append("дорогой")
-                Test = 1
-
-            if Test == 1:
-                break 
-
-            print("пожалуйста, введите правильный ввод!!")
-        '''
-        #Третий вопрос///////
-
-        Test = 0
-        while Test == 0:
-
-            Question4 = input('Вам нравится, чтобы он был большим или средним?\n')
-
-            if Question4 == 1:
-                LikeList.append("недорогой")
-                Test = 1
-            elif Question4 == 2:
-                LikeList.append("средний") 
-                Test = 1
-            elif Question4 == 3:
-                LikeList.append("дорогой")
-                Test = 1
-
-            if Test == 1:
-                break 
-
-            print("пожалуйста, введите правильный ввод!!")
+                    #второй вопрос/////////////
 
        
     elif Enter == 0:
@@ -1161,285 +1702,4 @@ while True:
 
 
 
-
-'''
-Test = 0
-while Test == 0:
-
-    if Question3 == 1:
-        LikeList.append("недорогой")
-        Test = 1
-    elif Question3 == 2:
-        LikeList.append("средний") 
-        Test = 1
-    elif Question3 == 2:
-        LikeList.append("дорогой")
-        Test = 1
-
-    if Test == 1:
-        break 
-
-    #print("пожалуйста, введите правильный ввод!!")
-'''
-'''
-print(LikeList)
-print(DisLikeList)
- 
-
-ii = 0
-ff = 0
-Questioni = input('Вы хотите финики из конкретной страны или из любого места ? (Да или нет)\n')
-Questionii = Questioni.lower()
-Optioni = ["да", "согласие", "yes"] 
-Optionii = ["нет", "не", "No"]
-flag = 0 
-for i in range(0,3):
-    if Optioni[i] in Questionii:
-            flag = 1    
-    elif Optionii[i] in Questionii:
-                        flag = 2
-                        ii=0
-                        ff=49
-           
-if flag == 1:
-
-#вопрос/////////////
-        Question4 = input('Вам нравится, что это из Саудовской Аравии?\n')
-
-        Question44 = Question4.lower()
-
-        Option1 = ["да", "согласие", "саудовск"] 
-        Option2 = ["нет", "не", "No"]
-
-        for i in range(0,3):
-            if Option1[i] in Question44:
-                ii=0
-                ff=21
-            
-                
-#вопрос/////////////
-        Question5 = input('Вам нравится, что это из Иран?\n')
-
-        Question55 = Question5.lower()
-
-        Option11 = ["да", "согласие", "Иран"] 
-        Option22 = ["нет", "не", "No"]
-
-        for i in range(0,3):
-            if Option11[i] in Question55:
-                if ff == 21:
-                    ii=0
-                    ff=36
-                else:
-                    ii=21
-                    ff=36
-#вопрос/////////////
-        Question6 = input('Вам нравится, что это из Эмирейтс?\n')
-
-        Question66 = Question6.lower()
-
-        Option111 = ["да", "согласие", "Эмирейтс"] 
-        Option222 = ["нет", "не", "No"]
-
-        for i in range(0,3):
-            if Option111[i] in Question66:
-                if ii == 0 and ff == 36:
-                    ii=0
-                    ff=49
-                elif ii==21:
-                    ii=21
-                    ff=49
-                else:
-                    ii=36
-                    ff=49
-
-        Name=UpdateD['Имя'].to_list()
-        print(data.iloc[ii,ff])
-
-
-
-
-
-'''
-
-
-'''
-for i in range(0,2):
-    for j in range(0,4):
-        if LikeList[4] == data.iloc[0,8]:
-           print(i)
-           print("good")
-
-
-
-ii =0
-ff = 49
-        
-Enter=int(input('Пожалуйста,\n нажмите 1 если хотите искать по одному объекту \n нажмите 2 если хотите по списку лайков \n нажмите 3 если хотите по списку дизлайков\n'))
-
-if Enter==1:
-
-            Date=UpdateD['Имя'].to_list()
-
-            Input=input('\n Пожалуйста, выберите одну финтк из списка:\n')
-
-            print(data.iloc[ii,ff])
-            print("\n")
-
-            ResultsNum=int(input('введите количество собак, похожих на ту, которую вы хотите увидеть\n'))
-
-            if Input in Date:
-
-                index=0;
-
-                for i in range(ii,ff):
-
-                    if Date[i]==Input:
-
-                        index=i
-
-                        break
-
-                GetData={'Similarity-euclidean':similarity(datasetPrice, datasetPrice[index], ResultsNum,'e'),'Price Similarity-jaccard':similarity(datasetFF, datasetFF[index], ResultsNum,'j')}
-
-                recommended=pd.DataFrame(GetData)
-
-                print('\n')
-
-                print(recommended)
-
-                print('\n')
-
-                print('neighboors after the combination of the three proximity measure using the formula of the magnitude of a 3D vector\n')
-
-                recommended_dates=LikeOne(dataset,dataset[index],ResultsNum)
-
-                for Simi in recommended_dates:
-
-                    print(Simi)
-
-                print('\n')
-
-            else:
-
-                print("no exact match found, but maybe you will like it")
-
-                index=random.randint(ii,ff)
-
-                print('\n')
-
-                recommended_dates=LikeOne(dataset,dataset[index],ResultsNum)
-
-                for Simi in recommended_dates:
-
-                    print(Simi)
-
-                print('\n')
-
-elif Enter==2:
-
-            Name=UpdateD['Имя'].to_list()
-
-            print()
-
-            print(Name)
-
-            print()
-
-            list_names=input('пожалуйста, введите таблицу названий пород собак, которые вам нравятся, разделите запятой\n')
-
-            list_names=list_names.split(',')
-
-            LLN=[Name1 for Name1 in list_names if Name1 in Name]
-
-            if not LLN:
-
-                print("no exact match found, but maybe you will like it")
-
-                index=random.randint(0,25)
-
-                print('\n')
-
-                recommended_dates=LikeOne(dataset,dataset[index],ResultsNum)
-
-                for Simi in recommended_dates:
-
-                    print(Simi)
-
-                print('\n')
-
-            else:
-
-                print('\nthese are the name of dog breeds that we found:')
-
-                print(LLN)
-
-                print()
-                       
-                dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i],UpdateD['Страна'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость/влажность'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
-
-                print('\n the n breeds of dogs recommended according to your table of dogs that you like\n')
-
-                LikeList=LikeList(dataset,dataset_tests,5)
-
-                print()
-
-                for Simi in LikeList:
-
-                    print(Simi)
-
-elif Enter==3:
-
-            Name=UpdateD['Имя'].to_list()
-
-            print()
-
-            print(Name)
-
-            print()
-
-            ListNames=input('пожалуйста, введите таблицу названий пород собак, которые вам нравятся, разделите запятой\n')
-
-            ListNames=ListNames.split(',')
-
-            LLN=[Name1 for Name1 in ListNames if Name1 in Name]
-
-            if not LLN:
-
-                print("no exact match found, but maybe you will like it")
-
-                index=random.randint(ii,ff)
-
-                print('\n')
-
-                DateRecom=LikeOne(dataset,dataset[index],ResultsNum)
-
-                for Simi in DateRecom:
-
-                    print(Simi)
-
-                print('\n')
-
-            else:
-
-                print('\nthese are the name of dog breeds that we found:')
-
-                print(LLN)
-
-                print()
-               
-
-                dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена($)/Кг'][i],UpdateD['Страна'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость/влажность'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in ListNames]
-
-                print('\n the n breeds of dogs recommended according to your table of dogs that you do not like\n')
-
-                DisLikeRecom=DisLikeList(dataset,dataset_tests,5)
-
-                print()
-
-                for Simi in DisLikeRecom:
-
-                    print(Simi)       
-
-'''
 

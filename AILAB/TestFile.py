@@ -6,7 +6,7 @@ import json
 base_path = "/home/sohiab/IntelligentLab1/AILab1DataSet.ods"
 sheet_index = 1
 data = read_ods(base_path, 1, columns=["No.","Имя", "Цена($)/Кг","Страна","Регион","Размер","Цвет","Сладость","жесткость/влажность"])
-print(data[])
+
 Date=data['Имя'].to_list()
 NDate1 = Date[0:15]
 NDate2 = Date[16:31]    
@@ -29,10 +29,11 @@ newdf = data.loc[(data.Страна == "Саудовская Аравия")]
 print(newdf)
 #print(json.dumps(NDate1, indent=4), end = ' ')
 
+names = [['Java', 'Python', 'Go'],['Java2', 'Python2', 'Go2']]
+test_list1 = [[1, 4, 5, 6, 5],[3, 5, 7, 2, 5]]
+TT = []
+for ii in range(len(names)):
+    TT = TT+ names[ii]
 
+print (TT)
 
-
-Question1 = input('Какие финики самое мягкий или полусухой или сухой? \n')
-
-if "или" in Question1:
-    print("good")
