@@ -22,18 +22,20 @@ from pprint import pprint
 
 base_path = "/home/sohiab/IntelligentLab1/AILab1DataSet.ods"
 sheet_index = 1
-
+dataset = read_ods(base_path, 1, columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
 data = read_ods(base_path, 1, columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
-
+df = pd.DataFrame(dataset,columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
 DataFrame = pd.DataFrame(data,columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
 
 UpdateD = DataFrame
 
+print(UpdateD)
+
 #///////////////////////////////////////////////////////////////////////////////
 #///////Get Similarity between all sets - jaccard_similarity///////////////////
-print("///////////////////////////////////////////////////////////////////")
+
 #print('Получить сходство между всеми наборами - жаккардовое сходство:')
-print("///////////////////////////////////////////////////////////////////\n")
+
 
 AnB = 0;
 AUB = 16;
@@ -86,16 +88,16 @@ UpdateD['жесткость']=labelencoder.fit_transform(UpdateD['жесткос
 
 #матрица корреляции 1:
 
-corr_matrix = UpdateD.corr()
-sn.heatmap(corr_matrix, annot=True)
-plt.show()
+#corr_matrix = UpdateD.corr()
+#sn.heatmap(corr_matrix, annot=True)
+#plt.show()
 
 
 #///////////////////Euclidean Distance///////////////////////////////////////
-print("///////////////////////////////////////////////////////////////////")
+
 #The Euclidean Distance between all rows in data:
 #print('Евклидово расстояние между всеми строками данных:')
-print("///////////////////////////////////////////////////////////////////\n")
+
 
 def euclidean_distance(r1, r2):
 
@@ -157,10 +159,10 @@ for i in range(0,4):
     print(f'The Euclidean Distance between: row#:{i} and row#:{iv} is {eu}')
 '''
 #///////////////////Distance Between Two Object///////////////////////////////////////
-print("///////////////////////////////////////////////////////////////////")
+
 #The Euclidean Distance between Two object:
 #print('Евклидово расстояние между двумя объектами:')
-print("///////////////////////////////////////////////////////////////////\n")
+
 '''
 for i in range(0,4):
     for iv in range(1,5):
@@ -179,9 +181,9 @@ for i in range(0,4):
 
 #///////////////////////////////////////////////////////////////////////
 # Get Similarity Distance between two row - Jaccard
-print("///////////////////////////////////////////////////////////////////")
+
 #print('Получить расстояние сходства между двумя строками - Жаккард:')
-print("///////////////////////////////////////////////////////////////////\n")
+
 
 
 def jaccard_distance(x,y):
@@ -215,9 +217,9 @@ for i in range(0,4):
           
 #/////////////////////////////////////////////////////////////////////////////////////
 #///////////////////Cosine Similarity between Prices Object///////////////////////////////////////
-print("///////////////////////////////////////////////////////////////////")
+
 #print('Косинусное сходство между ценовыми объектами:')
-print("///////////////////////////////////////////////////////////////////\n")
+
 
 def cosine_similarity(v1,v2):
             
@@ -473,7 +475,10 @@ print("///////////////////////////////////////////////////////////////////\n")
 while True:
   
     try:
-        Enter=int(input('Пожалуйста,\n\n нажмите 1 если хотите искать по одному объекту \n\n нажмите 2 если хотите по списку лайков \n\n нажмите 3 если хотите по списку дизлайков\n\n нажмите 4 для параметрического поиска по фильтрам \n\n нажмите 5 если вы хотите умный диалог \n\n Для выхода нажмите 0 \n\n ---->> '))
+        print("\n\t||||||||||||||||||")
+        print("\t  Основной список")
+        print("\t||||||||||||||||||\n")
+        Enter=int(input('Пожалуйста,\n\n нажмите 1 если хотите искать по одному объекту \n\n нажмите 2 если хотите по списку лайков \n\n нажмите 3 если хотите по списку дизлайков\n\n нажмите 4 для параметрического поиска по фильтрам \n\n нажмите 5 если вы хотите умный диалог \n\n >> Для выхода нажмите 0 \n\n ---->> '))
     except ValueError:
         print("//////////////////////Error !! /////////////////////////////////")
         print("Пожалуйста, введите только цифры из списка ниже !!")
@@ -1308,13 +1313,12 @@ while True:
                                                                 print("-------------------------------------------------------------------------------------------------------------------\n")
                                                                 print("\n")
                  
-    elif Enter == 5:
+    elif Enter >= 6:
 
-                print("///////////////////////////////////////////////////////////////////")
+                print("\n\n///////////////////////////////////////////////////////////////////")
                 print("///////////////////////////////////////////////////////////////////")
                 print('                           Финики                                  ')
                 print('                  Рекомендательная система                         ')
-                print('                        умный диалог                               ')
                 print("///////////////////////////////////////////////////////////////////\n")
 
                 #второй вопрос/////////////
@@ -1682,7 +1686,446 @@ while True:
 
                 
 
-                    #второй вопрос/////////////
+    elif Enter == 5:
+            from sklearn import datasets
+            from sklearn.cluster import KMeans
+            from nltk.stem import PorterStemmer
+            import re
+            import nltk
+            nltk.download('stopwords')
+            from nltk.corpus import stopwords
+            Date=UpdateD['Имя'].to_list()
+            NDate1 = Date[0:15]
+            NDate2 = Date[16:31]    
+            NDate3 = Date[32:48] 
+            NDataAll = Date[0:48]  
+            print("\n")
+            print("////////////////////////////////////// THE LIST of DATES - СПИСОК ФИНИКИ /////////////////////////////////////////////////////////////////////////////////////////////")
+            print("----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+            print(NDate1)
+            print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            print(NDate2)
+            print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            print(NDate3)
+            print("----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+            print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
+            print("\n")
+            print("\t|||||||||||||||||||||")
+            print("\t диалоговая система")
+            print("\t|||||||||||||||||||||\n")
+
+            print("=======================================\tНамекать: найти, рекомендация, какие, покаже, похожий")
+            print("=     ---           |||               =\t||||||||||||||||||")
+            print("=   -------        |||||              =\tСладость: (слишком сладкий, сладкий, сироп, прайминги, медовый, кислый)")
+            print("=  ---------      |||||||             =\t-----------------------------------------------------------------------")
+            print("=  ---------     |||||||||            =\tСтрана: (Саудовская Аравия, Иран, Эмирейтс)")
+            print("=   -------     |||||||||||      '    =\t-----------------------------------------------------------------------")
+            print("=    ------      |||||||||      '''   =\tжесткость: (мягкий, полусухой, сухой)")
+            print("=      ---         |||||       '''''' =\t-----------------------------------------------------------------------")
+            print("=                   |||         ''''  =\tЦвет: (темно коричневый, коричневый, желтый, черный)")
+            print("=                                ''   =\t-----------------------------------------------------------------------")
+            print("=======================================\tРазмер: (большой, средний, маленький)")
+            print("        =======================        \t-----------------------------------------------------------------------")
+            print("          ===================          \tРегион: (Медина, Джидда, Эр-Рияд, Касим, Хардж, Гормозган, Хузестан,")
+            print("            ===============            \tБушехер, Керман, Систан, Фарс, Аль-Айн, Лива, Абу-Даби)")
+            print("            ===============            \t-----------------------------------------------------------------------")
+            print("            ===============            \tЦена: (дорого, средний, недорогой)")
+            print("              ===========              \t-----------------------------------------------------------------------\n")
+            print("\n---------------------------------------------")
+            print('Объясните, что вы хотите, простыми словами ?')
+            print("---------------------------------------------\n")
+            print(">> Для перехода в главное меню >> написать 'выход' \n")
+        
+            Dataset5 = data
+            Test=0
+            ex22 = 0
+            exit7 = 0 #for Test77
+            priceTest = 0 #for price number,, the last function
+            while Test == 0:
+                        
+                        if ex22 == 1:
+                            break
+                        while Test == 0:            
+                                    Dataset5 = data
+                                    Question2 = input(' ---->>>> ')
+                                    exx = 1
+                                    exit = 0
+                                    Ee = 1
+                                    Ee1 = ["выход","выхо","выйти","выйт","exit"]
+                                    exxx = 0
+                                    for ii in range(0,5):
+                                        if Ee1[ii] in Question2:
+                                                Ee=0
+                                                exit = 1
+                                                print(">> До встречи <<")
+                                                exxx = 1
+                                                ex22 = 1
+                                                break
+                                    if exxx == 1:
+                                        break
+
+                                    #Apllying NLP Techniques - natural language processing
+                                    Question22 = Question2.lower()
+                                    pricenum = nltk.word_tokenize(Question22)
+                                    result = re.sub(r'[^А-Яа-я ]', '', Question22)
+                                    words = nltk.word_tokenize(result)
+                                    filtered_words = [word for word in words if word.lower() not in stopwords.words('russian')]
+                                    stemmer = PorterStemmer()
+                                    stemmed_words = [stemmer.stem(word) for word in filtered_words]
+                                    UserQ = " ".join(stemmed_words)
+                                    #Greeting
+                                    Greet = 0
+                                    Question00 = ["привет","прив","здравству","здоро́в","чао!"]
+
+                                    for i in range(0,5):
+                                        if Question00[i] in UserQ:
+                                            print("добро пожаловать!")
+                                            Greet = 1
+                                            
+                                            break
+                                    #Question List
+                                    Question0 = ["финик","фник", "финиковый","фрукт", "фиников","фини", "финики", "финико", "date"]
+                                    Question1 = ["найти", "найди","най", "выбери","выб", "выбрат", "докажи", "докаж", "рекомендац", "как", "какие", "покаже","пакаж","покаж","показат","показ","вид","рекоменд","хочу","хотет","нуж"] 
+                                    Question2 = ["сладкий", "сладк", "сладк", "сладк", " "]
+                                    Question3 = ["сладкий", "сладк", "конфе", "конф"]
+                                    Question4 = ["сироп", "сиро", "сиропы", "сир"]
+                                    Question5 = ["прайминги", "прайминг", "грунтовки", "грунтов"]
+                                    Question6 = ["медовый", "мед", "мёд", "медо"]
+                                    Question7 = ["похожий","похож", "схож","сходн","подобн","равн","одинаков","similar"]
+                                    Question8 = ["не","нет","no","not"]
+
+                                    #Answer List
+                                    #Сладость
+                                    AnsCL1 = ["слишком", "слишк", "слишко", "очен", "very"]
+                                    AnsCL2 = ["сладкий", "сладк", "сладк", "сладк", "sweet"]
+                                    AnsCL3 = ["сироп", "сиро", "сиропы", "сир", "syrup"]
+                                    AnsCL4 = ["прайминги", "прайминг", "грунтовки", "грунтов", "priming"]
+                                    AnsCL5 = ["медовый", "мед", "мёд", "медо", "honey"]
+                                    AnsCL6 = ["кислый", "кисл", "прокисший", "прокисш", "sour"]
+                                    #Страна
+                                    AnsC1 = ["саудовская", "саудовскаяаравия", "саудовск", "арави", "saudi"]
+                                    AnsC2 = ["иран", "ира", "иран", "iran", "eran"]
+                                    AnsC3 = ["эмирейтс", "эмирей", "эмирейт", "арави", "emirates"]
+                                    AnsC11 = ["страны", "стран","странах"]
+                                    AnsC22 = ["растут", "рас","расти"]
+                                    #жесткость
+                                    AnsX1 = ["мягкий", "мягк", "легкий", "легк", "soft"]
+                                    AnsX2 = ["полусухой", "полусух", "полу", "semi-dry", "semi"]
+                                    AnsX3 = ["сухой", "сухо", "сушит", "сухие", "dry"]
+                                    #Цвет
+                                    AnsT1 = ["темно", "темнокоричневый", "темн", "dark", "darkbrown"]
+                                    AnsT2 = ["коричневый", "коричне", "карий", "brown", "brow"]
+                                    AnsT3 = ["желтый", "желт", "мед", "yellow", "yello"]
+                                    AnsT4 = ["черный", "черн", "темный", "темн", "black"]
+                                    #Размер
+                                    AnsS1 = ["большой", "больш", "крупн", "широк", "larg"]
+                                    AnsS2 = ["средний", "средн", "нормальн", "небольш", "medium"]
+                                    AnsS3 = ["маленьк", "мал", "small", "небольш", "little"]
+                                    #Регион
+                                    AnsR1 = ["Медина", "Джидда", "Эр-Рияд", "Касим", "Хардж","Гормозган", "Хузестан", "Бушехер", "Керман", "Фарс","Аль-Айн", "Лива", "Абу Даби"]
+                                    #######
+                                    AnsR = [["медина", "медин", "medina", "madin"],["джидда", "джид", "jeddah", "jiddah"],["эр-рияд", "эррияд", "эр-рия", "riyadh"],["касим", "каси", "qasi", "qasim"],["хардж", "хард", "hardge", "kharge"],["гормозган", "гормозг", "горм", "gormozgan"],["хузестан", "хузест", "khuzestan", "khuzest"],["бушехер", "бушех", "busheher", "bush"],["керман", "керм", "kerman", "kerm"],["систан", "сист", "sistan", "sist"],["фарс", "фар", "farce", "farec"],["аль-айн", "альайн", "аль", "ain"],["лива", "лив", "liva", "leva"],["абу-даби", "абу", "abu", "abudhabi"]]
+                                    #Цена
+                                    priceL = ["цена","цен","стоимос","price"]
+                                    AnsP1 = ["дорого","дорог","expensive","пышн"]
+                                    AnsP2 = ["средний","средн","нормальн","регулярн"]
+                                    AnsP3 = ["недорогой","недорог","дешевый","дешев"]
+                                    exit7 = 0 #for Test77 
+                                    TTa = 0
+                                    TTb = 0
+                                    Test7 = 0
+                                    net = 0
+                                    for i in range(0,9):
+                                        if Question0[i] in UserQ:
+                                            Test = 1
+                                            Greet = 0
+                                            break
+                                    for i in range(0,20):
+                                        if Question1[i] in UserQ and Test == 1:
+                                            Test = 11
+                                            break
+                                    for i in range(0,3):
+                                        if AnsC11[i] in UserQ:
+                                            TTa = 222
+                                            break
+                                    for i in range(0,3):
+                                        if AnsC22[i] in UserQ:
+                                            TTb = 223
+                                            break
+                                    if TTa == 222 and (Test == 1 or Test == 11) and TTb == 223:
+                                            Test = 22
+                                    for i in range(0,3):
+                                            if priceL[i] in UserQ:
+                                                Test = 33
+                                    for i in range(0,8):
+                                        if Question7[i] in UserQ and (Test == 1 or Test == 11):
+                                            Test = 11
+                                            Test7 = 77
+                                            break
+                                    for i in range(0,4):
+                                        if Question8[i] in result:
+                                            net = 1
+                                            break
+
+                                    if Test == 11:
+                                        for j in range(0,5): 
+                                                if AnsCL1[j] in UserQ and AnsCL2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'слишком сладкий' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsCL2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'сладкий' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsCL3[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'сироп' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsCL4[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'прайминги' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsCL5[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'медовый' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsCL6[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Сладость == 'кислый' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsC1[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Страна == 'Саудовская Аравия' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsC2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Страна == 'Иран' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsC3[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Страна == 'Эмирейтс' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsX1[j] in UserQ:
+                                                    filtered_df = Dataset5.query("жесткость == 'мягкий' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsX2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("жесткость == 'полусухой' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsX3[j] in UserQ:
+                                                    filtered_df = Dataset5.query("жесткость == 'сухой' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsT1[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Цвет == 'темно коричневый' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsT2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Цвет == 'коричневый' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsT3[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Цвет == 'желтый' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsT4[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Цвет == 'черный' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsS1[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Размер == 'большой' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsS2[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Размер == 'средний' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,5): 
+                                                if AnsS3[j] in UserQ:
+                                                    filtered_df = Dataset5.query("Размер == 'маленький' ")
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,13): 
+                                            for k in range(0,4):
+                                                if AnsR[j][k] in UserQ:
+                                                    category = "Регион"
+                                                    rr = AnsR1[j]
+                                                    query = f"Регион == '{rr}'"
+                                                    filtered_df = Dataset5.query(query)
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,4): 
+                                                if AnsP1[j] in UserQ:
+                                                    query = "Цена >= 30"
+                                                    filtered_df = df.query(query)
+                                                    Dataset5 = filtered_df
+                                        for j in range(0,4): 
+                                                if AnsP3[j] in UserQ:
+                                                    query = "Цена < 10"
+                                                    filtered_df = df.query(query)
+                                                    Dataset5 = filtered_df
+                                                    net = 0
+                                                    break
+                                            
+                                    if Test7 == 77:
+                                        exit7 = 0
+                                        co=1
+                                        for j in range(len(NDataAll)): 
+                                            for k in range(len(pricenum)):
+                                                if NDataAll[j] in pricenum[k] and exit7 == 0:
+                                                    ans77 = pricenum[k]
+                                                    index=0;
+                                                    for i in range(ii,ff):
+                                                        if Date[i]==ans77:
+                                                            index=i
+                                                            break
+                                                    Name=UpdateD['Имя'].to_list()
+                                                    ListDates = []
+                                                    LikeList11 = []
+                                                    ListOfNames = ans77
+                                                    ListDates.append(ListOfNames)                                       
+                                                    LLN=[Name1 for Name1 in ListDates if Name1 in Name]
+                                                    dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
+                                                    LikeList11=LikeList(dataset,dataset_tests)
+                                                    print("\n")
+                                                    print(f'Финики похожий на {ans77}:')
+                                                    print("\n")
+                                                    for Simi in LikeList11:
+                                                            print(f'\t{co}- {Simi}\n')
+                                                            co =1+co
+                                                            exit7 = 1
+                                                            Test = 0
+                                                    print('\n')
+                                                    #LikeList = []
+                                                    break
+                                    if Test == 22:
+                                        print("\n") 
+                                        print("Финики в основном выращивают в странах, расположенных в теплых,") 
+                                        print("засушливых регионах с долгим летом и малым количеством осадков.")
+                                        print("К основным странам, где выращивают финики, относятся:\n")
+                                        print("Египет, Иран, Саудовская Аравия, Ирак, Объединенные Арабские Эмираты,\nАлжир, Тунис,Оман, Пакистан, Калифорния, США.")
+                                        print("Вышеперечисленные страны являются основными производителями фиников,")
+                                        print(" но в нашей системе рекомендаций мы сосредоточимся только на трех странах:\n")
+                                        print("1- Саудовская Аравия")
+                                        print("2- Иран")
+                                        print("3- Эмираты")
+                                        print("\n")
+                                        exx = 0
+                                        Test = 0
+                                        break
+                   
+                                    if Test == 33:
+                                            for j in range(0,4): 
+                                                if AnsP1[j] in UserQ:
+                                                    query = "Цена >= 30"
+                                                    filtered_df = df.query(query)
+                                                    Dataset5 = filtered_df
+                                            for j in range(0,4): 
+                                                if AnsP2[j] in UserQ:
+                                                    query = "Цена < 30 and Цена >= 10 "
+                                                    filtered_df = df.query(query)
+                                                    Dataset5 = filtered_df
+                                            for j in range(0,4): 
+                                                if AnsP3[j] in UserQ:
+                                                    query = "Цена < 10 "
+                                                    filtered_df = df.query(query)
+                                                    Dataset5 = filtered_df
+                                                    net = 0
+                                            #Last Function for Price by Number
+                                            rr1 = list(range(30,46))
+                                            strings = [str(x) for x in rr1] 
+                                            for k in range(len(strings)):
+                                                    for kk in range(len(pricenum)):
+                                                            if strings[k] in pricenum[kk]:
+                                                                UpdatePr = int(pricenum[kk])
+                                                                if UpdatePr >= 30:
+                                                                    query = "Цена >= 30"
+                                                                    filtered_df = df.query(query)
+                                                                    Dataset5 = filtered_df
+                                                                    priceTest = 1
+                                                                    break
+                                            rr1 = list(range(10,30))
+                                            strings = [str(x) for x in rr1] 
+                                            for k in range(len(strings)):
+                                                    for kk in range(len(pricenum)):
+                                                            if strings[k] in pricenum[kk]:
+                                                                UpdatePr = int(pricenum[kk])
+                                                                if UpdatePr < 30 and UpdatePr >= 10:
+                                                                    query = "Цена < 30 and Цена >= 10 "
+                                                                    filtered_df = df.query(query)
+                                                                    Dataset5 = filtered_df
+                                                                    priceTest = 1
+                                                                    break
+                                            rr1 = list(range(1,10))
+                                            strings = [str(x) for x in rr1] 
+                                            for k in range(len(strings)):
+                                                    for kk in range(len(pricenum)):
+                                                            if strings[k] in pricenum[kk]:
+                                                                UpdatePr = int(pricenum[kk])
+                                                                if UpdatePr < 10:
+                                                                    query = "Цена < 10"
+                                                                    filtered_df = df.query(query)
+                                                                    Dataset5 = filtered_df
+                                                                    priceTest = 1
+                                                                    break
+                                    if len(Dataset5) == 49 and Greet == 0 and exit7 != 1:
+
+                                        print("\nИзвините, я вас не понимаю, пожалуйста, объясните подробнее !!\n")
+                                        Test = 0                             
+
+                                    elif Test == 1 or Test == 11 or Test == 22 or Ee == 0 or Test == 33 or Test == 77:
+                                            break
+                                    elif Greet != 1 and exit7 != 1:
+
+                                        print("не могу тебя понять, Можешь объяснить подробнее, пожалуйста !?")
+                                        print("эта система рекомендаций только для финики !! \n")
+                                        print("=============================================\n")
+                                    elif exit7 == 1:
+                                        break
+
+                        if exx == 1 and exit7 == 0:  
+                                        if exit == 1:
+                                            break 
+                                        if net == 1:
+                                                lis = Dataset5['No.'].to_list()
+                                                lisU = [x - 1 for x in lis]
+                                                dataFrameNet = data.drop(lisU)
+                                                print('\n Рекомендуемые финики для вас: \n')    
+                                                print(dataFrameNet)
+                                                Test = 0
+                                                print("\n---------------------------------------------------------------------------------------------------------\n")
+                                        elif len(Dataset5) != 49 and priceTest == 0:
+                                                print('\n Рекомендуемые финики для вас:\n')    
+                                                print(Dataset5)
+                                                print("\n---------------------------------------------------------------------------------------------------------\n")
+                                                Test = 0
+                                        elif priceTest == 1:
+                                                print('\n Рекомендуемые финики для вас:') 
+                                                print('\n "Тот же ценовой диапазон"\n')    
+                                                print(Dataset5)
+                                                print("\n---------------------------------------------------------------------------------------------------------\n")
+                                                Test = 0
+                                                priceTest == 1
+                                        elif len(Dataset5) != 49 and Greet != 1:
+                                            Test = 0
+                                            print('\n ------ Другие варианты, возможно, вам нравятся:------\n')    
+                                                                
+                                            print("\t\t||||||||||||")
+
+                                            index=random.randint(0,15)
+
+                                            recommended_dates=LikeOne(dataset,dataset[index])
+                                            i=1
+                                            for Simi in recommended_dates:
+                                                #print(Simi)
+                                                print(f'\t\t{i}: {Simi}')
+                                                i =1+i
+                                            print("\t\t||||||||||||\n")
+                        if Test == 0:
+                             print("\n---------------------------------------------")
+                             print("Если вы хотите что-то еще, пожалуйста")
+                             print('Объясните, что вы хотите, простыми словами ?')
+                             print("---------------------------------------------\n")
+                             print(">> Для перехода в главное меню >> написать 'выход' \n")
+                             continue
 
        
     elif Enter == 0:
@@ -1691,9 +2134,9 @@ while True:
         print("||||До встречи||||")
         print("||||||||||||||||||")
         break
+
         
     else:
-
         print("//////////////////////Error !! /////////////////////////////////")
         print("Пожалуйста, введите действительные числа !!")
         print("///////////////////////////////////////////////////////////////\n")
