@@ -1,470 +1,34 @@
-from pandas_ods_reader import read_ods
 import pandas as pd
-import math
 from math import *
-import seaborn as sn
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder
-import os
-import numpy as np
 import random
 import nltk
-from nltk.tokenize import word_tokenize
+import sys
+import os
 from nltk.corpus import stopwords
-import json
 from pprint import pprint
 
+from data.dataset_handler import load_and_process_dataset
+from similarity.euclidean import euclidean_distance, euclidean_distance2
+from similarity.jaccard import jaccard_distance
+from similarity.cosine import cosine_similarity, num_sim, similarity, similarity2
+from similarity.metrics_by_likes import LikeOne, LikeList, DisLikeList
 
-#“не найдено точного соответствия, однако, возможно, Вам понравится”
+from recommendation_system.search_single_item import SearchSingleItem
 
-#/////////////////////////////////////////////////////////////////
-# Get the data set
+# Load and process the dataset
+datasets = load_and_process_dataset()
 
-base_path = "/home/sohiab/IntelligentLab1/AILab1DataSet.ods"
-sheet_index = 1
-dataset = read_ods(base_path, 1, columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
-data = read_ods(base_path, 1, columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
-df = pd.DataFrame(dataset,columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
-DataFrame = pd.DataFrame(data,columns=["No.","Имя", "Цена","Страна","Регион","Размер","Цвет","Сладость","жесткость"])
+UpdateD = datasets["processed_data"]
+data = datasets["data"] 
+datasetPrice = datasets["dataset_price"]
+datasetFF = datasets["dataset_ff"]
+dataset = datasets["dataset_full"]
+datasetCountry = datasets["dataset_country"]
+df = dataset
 
-UpdateD = DataFrame
 
+print("\n Print all the data set - Распечатайте весь набор данных \n")
 print(UpdateD)
-
-#///////////////////////////////////////////////////////////////////////////////
-#///////Get Similarity between all sets - jaccard_similarity///////////////////
-
-#print('Получить сходство между всеми наборами - жаккардовое сходство:')
-
-
-AnB = 0;
-AUB = 16;
-itemsi = range(0,49);
-itemsiv = range(1,49);
-itemsj = [1,2,3,4,5,6,7,8];
-
-similarity = []
-similarityDis = []
-for i in range(0,49):
-                    for iv in range(1,49):
-                        AnB = 0;
-                        for j in itemsj:
-                            if (data.iloc[i,j] == data.iloc[iv,j]) is not True:
-                                AnB +=1
-                            if j == 8:    
-                            #jaccard_similarity:
-                                similarity.append(AnB/AUB)
-                                Simi = AnB/AUB 
-                                #similarityDis.append((AUB-AnB)/AUB)
-                                if Simi >= 0.2 and Simi <= 1:
-                                    Si = int(Simi*100)
-                                    #print(f'item#:{i} and item#:{iv} There Similarity is {Si}%')
-                            
-            
-#print(similarity)  
-#print(" ")
-#print(similarityDis) 
-#print(data)
-
-#////////////////////////////////////////////////////////////////////////
-#///////////////////////////////////////////////////////////////////////
-#Make all letter lower case
-UpdateD['Имя'] = UpdateD['Имя'].str.lower()
-
-UpdateD['Страна'] = UpdateD['Страна'].str.lower()
-
-UpdateD['Регион'] = UpdateD['Регион'].str.lower()
-
-UpdateD['Размер'] = UpdateD['Размер'].str.lower()
-#Make some object to number
-labelencoder=LabelEncoder()
-
-UpdateD['Страна']=labelencoder.fit_transform(UpdateD['Страна'])
-UpdateD['Регион']=labelencoder.fit_transform(UpdateD['Регион'])
-UpdateD['Размер']=labelencoder.fit_transform(UpdateD['Размер'])
-UpdateD['Цвет']=labelencoder.fit_transform(UpdateD['Цвет'])
-UpdateD['Сладость']=labelencoder.fit_transform(UpdateD['Сладость'])
-UpdateD['жесткость']=labelencoder.fit_transform(UpdateD['жесткость'])
-
-#матрица корреляции 1:
-
-#corr_matrix = UpdateD.corr()
-#sn.heatmap(corr_matrix, annot=True)
-#plt.show()
-
-
-#///////////////////Euclidean Distance///////////////////////////////////////
-
-#The Euclidean Distance between all rows in data:
-#print('Евклидово расстояние между всеми строками данных:')
-
-
-def euclidean_distance(r1, r2):
-
-	Distance = 0.0
-    
-
-	for i in range(0,len(r1)):
-		Distance += (r1[i] - r2[i])**2
-	return sqrt(Distance)
-
-
-def euclidean_distance2(r1, r2):
-
-	Distance = 0.0
-    
-	for i in range(0,len(r2)):
-		Distance += ((r1[i] * r2[i])/100)
-	return Distance
-
-#a = [10]
-#b = [30,20,10,45]
-#dddd = euclidean_distance2(a,b)
-#Si = int(dddd*100)
-#print("New Euclidean Distance Test")
-#print(dddd)
-
-'''
-for i in range(0,4):
-    for iv in range(1,5):
-        #v1 = UpdateD.iloc[i,2]
-        #v2 = UpdateD.iloc[iv,2]
-        v1 = data.iloc[i][2:3].to_list()
-        v2 = data.iloc[iv][2:3].to_list()
-        print("v1")
-        print(v1)
-        print(v2)
-        CosineS = euclidean_distance(v1,v2)
-        print(f'eeeeeeeeeeeee - Сходство между {i} и {iv} является {CosineS}')
-'''
-#/////////////////////////////////////////////////////////////////////////////
-
-'''
-def euclidean_distance(r1, r2):
-	Distance = 0.0
-	for i in range(0,len(r1)):
-		Distance += (r1[i] - r2[i])**2
-	return sqrt(Distance)
-
-itemsi = range(0,49);
-itemsiv = range(1,49);
-
-for i in range(0,4):
-    for iv in range(1,5):
-        row1=UpdateD.iloc[i][2:8].to_list()
-        row2=UpdateD.iloc[iv][2:8].to_list()
-    #print(row1)
-    #print(row2)
-    eu = euclidean_distance(row1,row2)
-    print(f'The Euclidean Distance between: row#:{i} and row#:{iv} is {eu}')
-'''
-#///////////////////Distance Between Two Object///////////////////////////////////////
-
-#The Euclidean Distance between Two object:
-#print('Евклидово расстояние между двумя объектами:')
-
-'''
-for i in range(0,4):
-    for iv in range(1,5):
-        v1=UpdateD.iloc[i,8]
-        v2=UpdateD.iloc[iv,8]
-        Vdiff = abs(v2-v1)
-        if Vdiff == 0:
-             #print(f'жесткость объект#:{i} и объект#:{iv} похожий')
-        elif Vdiff == 1:
-             #print(f'жесткость объект#:{i} и объект#:{iv} так близко')
-        else:
-             #print(f'жесткость объект#:{i} и объект#:{iv} не похоже')
-
-'''
-#///////////////////////////////////////////////////////////////////////
-
-#///////////////////////////////////////////////////////////////////////
-# Get Similarity Distance between two row - Jaccard
-
-#print('Получить расстояние сходства между двумя строками - Жаккард:')
-
-
-
-def jaccard_distance(x,y):
-
-    x1=set(x)
-    x2=set(y)
-            
-    simalarity=float(len(x1.intersection(x2))/len(x1.union(x2)))
-    result = 1-simalarity
-    #print("new test")
-    #print(x1)
-    #print(x2)
-    #print(simalarity)
-    #print(result)
-
-    return result;
-
-
-for i in range(0,4):
-    for iv in range(1,5):
-            x = data.iloc[i][2:3].to_list()
-            y = data.iloc[iv][2:3].to_list()
-            #print("x y")
-            #print(x)
-            #print(y)
-            jacS = jaccard_distance(x,y)
-            if jacS >= 0.1 and jacS <= 1:
-                 Si = int(jacS*100)
-                    #print(f'item#:{i} and item#:{iv} There Similarity is {Si}%')
-                 #print(f'Jaccard - дистанционное сходство {i} и {iv} является {Si} %')
-          
-#/////////////////////////////////////////////////////////////////////////////////////
-#///////////////////Cosine Similarity between Prices Object///////////////////////////////////////
-
-#print('Косинусное сходство между ценовыми объектами:')
-
-
-def cosine_similarity(v1,v2):
-            
-       x = v1
-       y = v2
-       sumxx, sumxy, sumyy = 0, 0, 0
-       sumxx += x*x
-       sumyy += y*y
-       sumxy += x*y
-       
-       return sumxy/math.sqrt(sumxx*sumyy)
-
-#itemsi = range(0,49);
-#itemsiv = range(1,49);
-def num_sim(n1, n2):
-  """ calculates a similarity score between 2 numbers """
-  return 1 - abs(n1 - n2) / (n1 + n2)
-
-
-
-#//////////////////////////////////////////////////////////////////////////////////
-
-#//////////////////////////////////////////////////////////////////////////////////
-#///////////////Similarity Distance ///////////////////////////////////
-
-def similarity(AllData,Datar,m):
-
-    distances=list()
-    ii = 0;
-   
-    for RowList in AllData:
-
-        if RowList==Datar:
-
-            continue
-
-        if m=='a':
-
-            #distb=euclidean_distance(Datar[2:3],RowList[2:3])
-            distb=euclidean_distance(Datar[2:8],RowList[2:8])
-            #print("inside similarity euclidean distance")
-            #print(distb)
-            distb = int(distb)
-            if distb >= 3.5 and distb <= 6:
-                dist = distb
-            else:
-                continue
-
-        elif m=='p':
-
-            #distb=jaccard_distance(Datar[1:],RowList[1:])
-            distb=euclidean_distance2(Datar[1:],RowList[1:])
-            #print("inside similarity jaccard distance")
-            #print(distb)
-            distb = int(distb)
-            if distb >= 0 and distb <= 2:
-                dist = distb
-            else:
-                continue
-  
-        distances.append((RowList[0],dist))
-        ii+=1;
-        
-#ssss
-
-    distances.sort(key=lambda tup: tup[1])
-
-    Simi=list()
-    LL = len(distances)
-    #print(LL)
-
-    for i in range(LL):
-
-        Simi.append(distances[i][0])
-        #Simi.append(dist[i][0])
-
-    return Simi
-
-#////////////////////////////////////////////////////////////
-
-def similarity2(AllData,Datar):
-
-    distances=list()
-   
-    for RowList in AllData:
-        
-        if RowList[1]==Datar[1]:
-
-            distances.append(RowList)
-        
-
-    distances.sort(key=lambda tup: tup[1])
-
-    Simi=list()
-    LL = len(distances)
-    #print(LL)
-
-    for i in range(LL):
-
-        Simi.append(distances[i][0])
-    
-
-    return Simi
-
-#///////////////////////////////////////////////////////////
-
-#///////////////////////////////////////////////////////////
-
-def LikeOne(AllData,Datar):
-#like one
-    distances=list()
-   
-    for Trow in AllData:
-
-        if Trow[0]==Datar[0]:
-
-            continue
-
-        dist=sqrt(euclidean_distance2([Datar[1]],[Trow[1]])**2+euclidean_distance(Datar[2:8],Trow[2:8])**2)
-        #dist=sqrt(euclidean_distance2(Datar[1:],Trow[1:])**2)
-        
-       
-
-        distances.append((Trow[0],dist))
-
-    distances.sort(key=lambda tup: tup[1])
-
-    Simi=list()
-
-    for i in range(0,4):
-
-        Simi.append(distances[i][0])
-
-    ens=set(Simi)
-    return Simi
-
-
-
-#///////////////////////////////////////////////////////////
-
-def LikeList(AllData,DataRs):
-#like list data
-
-    distances=list()
-
-    for r1 in AllData:
-
-         distances=list()
-
-    for r1 in AllData:
-
-         distances=list()
-
-    for r1 in AllData:
-
-        distance=sqrt(euclidean_distance(DataRs[0][1:2],r1[1:2])**2+jaccard_distance(DataRs[0][2:7],r1[2:7])**2)
-        #dist=sqrt(euclidean_distance([DataRs[1]],[r1[1]])**2+euclidean_distance(DataRs[2:7],r1[2:7])**2)
-
-        dataa=DataRs[0][0]
-
-        for r2 in DataRs:
-
-            if r2==r1:
-
-                continue
-
-            dist=sqrt(euclidean_distance(r2[1:2],r1[1:2])**2+jaccard_distance(r2[2:7],r1[2:7])**2)
-            #dist=sqrt(euclidean_distance([r2[1]],[r1[1]])**2+euclidean_distance(r2[2:7],r1[2:7])**2)
-
-            if dist<distance:
-
-                distance=dist
-
-                date=r2[0]
-
-        distances.append((r1[0],distance))
-
-    distances.sort(key=lambda tup: tup[1])
-
-    Simi=list()
-
-    for i in range(0,8):
-
-        Simi.append(distances[i][0])
-
-    return Simi
-
-#/////////////////////////////////////////////////////////////////////////////////
-
-
-def DisLikeList(AllData,Datars):
-#list of dislike date
-
-    distances=list()
-
-    for r2 in AllData:
-
-        distance=sqrt(euclidean_distance([Datars[0][1]],[r2[1]])**2+jaccard_distance(Datars[0][2:8],r2[2:8])**2)
-
-        date=Datars[0][0]
-
-        for r1 in Datars:
-
-            if r1==r2:
-
-                continue
-
-            dist=sqrt(euclidean_distance([r1[1]],[r2[1]])**2+jaccard_distance(r1[2:8],r2[2:8])**2)
-
-            if dist<distance:
-
-                distance=dist
-
-                date=r1[0]
-
-        if r2 not in Datars:
-
-            distances.append((r2[0],distance))
-
-    #distances.sort(key=lambda tup: tup[1],reverse=True)
-    
-    distances.sort(key=lambda tup: tup[1])
-
-    Simi=list()
-
-    for i in range(8):
-
-        Simi.append(distances[i][0])
-       
-
-    return set(Simi)
-
-
-
-#//////////////////////////Dataset///////////////////////////////////////////////////////////////
-
-
-datasetPrice=[[UpdateD['Имя'][i],UpdateD['Цена'][i]] for i in range(0,49)]
-
-datasetFF=[[UpdateD['Имя'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость'][i]] for i in range(0,49)]
-
-dataset=[[UpdateD['Имя'][i],UpdateD['Цена'][i],UpdateD['Страна'][i],UpdateD['Регион'][i],UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i], UpdateD['жесткость'][i]] for i in range(0,49)]
-
-datasetCountry=[[UpdateD['Имя'][i],UpdateD['Страна'][i]] for i in range(0,49)]
-
 
 print("///////////////////////////////////////////////////////////////////")
 print("///////////////////////////////////////////////////////////////////")
@@ -487,92 +51,8 @@ while True:
     ii =0
     ff = 49
     if Enter==1:
-                Date=UpdateD['Имя'].to_list()
-                NDate1 = Date[0:15]
-                NDate2 = Date[16:31]    
-                NDate3 = Date[32:48]   
-                print("\n")
-                print("////////////////////////////////////// THE LIST of DATES - СПИСОК ФИНИКИ /////////////////////////////////////////////////////////////////////////////////////////////")
-                print("----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-                print(NDate1)
-                print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-                print(NDate2)
-                print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-                print(NDate3)
-                print("----------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-                print("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////")
-                print("\n")
 
-                Input=input('Пожалуйста, выберите одну финтк из списка:\n ---->> ')
-
-                #ResultsNum=int(input('Пожалуйста, сколько похожих товаров вы хотите видеть:\n'))
-
-                if Input in Date:
-
-                    index=0;
-
-                    for i in range(ii,ff):
-
-                        if Date[i]==Input:
-
-                            index=i
-
-                            break
-                    
-                    #print(UpdateD)
-                    SimiData1={'Подобие-евклидово по Размер, Цвет, Сладость и жесткость':similarity(datasetFF, datasetFF[index],'a')}
-                    SimiData2={'Сходство-евклидово по Цена($)/Кг':similarity(datasetPrice, datasetPrice[index],'p')}
-                   
-                    
-                    
-        
-                    recommended1=pd.DataFrame(SimiData1)
-                    recommended2=pd.DataFrame(SimiData2)
-                    
-            
-                
-                    print(recommended1)
-                    print(recommended2)
-               
-                    
-                   
-                    
-
-                    print('\n')
-
-                    print('\n')
-
-                #++++++++++++++++++++++++++++++++++++??????????????????????????????????????????????????
-                    
-                    print('Сходство рекомендаций по лайкам:\n')
-
-                    LikeDate=LikeOne(dataset,dataset[index])
-                    #print(LikeDate)
-                
-                    for Simi in LikeDate:
-
-                        print(Simi)
-
-                    print('\n')
-                    
-
-                else:
-
-                    print("Другие варианты, возможно, вам понравятся:")
-
-                    index=random.randint(ii,ff)
-
-                    print('\n')
-
-                    LikeDate=LikeOne(dataset,dataset[index])
-
-                    for Simi in LikeDate:
-
-                        print(Simi)
-
-                    print('\n')
-
-    #/////////////////////////////////////////////////////////////////////////////////////////////
+        SearchSingleItem.search(UpdateD)
 
     elif Enter==2:
                 Date=UpdateD['Имя'].to_list()
@@ -617,8 +97,6 @@ while True:
                 #ResultsNum=int(input('Пожалуйста, сколько похожих товаров вы хотите видеть >> \n'))
 
                 #ListDates=ListDates.split(',')
-
-            
 
                 LLN=[Name1 for Name1 in ListDates if Name1 in Name]
                 #o = 1
@@ -694,9 +172,7 @@ while True:
                 print(DListDates)
 
                 #ResultsNum=int(input('Пожалуйста, сколько похожих товаров вы хотите видеть >> \n'))
-
                 
-
                 LLN=[Name1 for Name1 in DListDates if Name1 in Name]
 
                 if not LLN:
@@ -718,7 +194,6 @@ while True:
                 else:
 
                 
-
                     dataset_tests=dataset_tests=[[UpdateD['Имя'][i],UpdateD['Цена'][i], UpdateD['Страна'][i],UpdateD['Регион'][i], UpdateD['Размер'][i],UpdateD['Цвет'][i],UpdateD['Сладость'][i],UpdateD['жесткость'][i]] for i in range(ii,ff) if UpdateD['Имя'][i] in LLN]
 
                     print('\n Рекомендуемые финики не нравится для вас: \n')

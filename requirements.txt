@@ -1,0 +1,6 @@
+pandas
+pandas-ods-reader
+scikit-learn
+seaborn
+matplotlib
+nltk
