@@ -1,5 +1,5 @@
 # AI-Powered Recommendation System
-Programmed by Sohaibssb for Artificial intelligence systems Course at Bauman University.
+Programmed by Sohaibssb as part of Artificial intelligence systems Course at Bauman University.
 
 Description:
 This project implements a recommendation system using various machine learning (ML) and natural language processing techniques, such as clustering, similarity scoring, and vectorization. Developed with Python, it uses data manipulation and analysis libraries to provide robust recommendations based on user preferences.
